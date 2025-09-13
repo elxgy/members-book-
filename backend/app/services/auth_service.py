@@ -33,7 +33,8 @@ def login_user(data):
 
     token = jwt.encode({
         'public_id': str(user['_id']),
+        'role': user['user_type'],
         'exp': datetime.utcnow() + timedelta(minutes=30)
     }, Config.JWT_SECRET_KEY, algorithm="HS256")
 
-    return {"token": token}, 200
+    return {"token": token, "user_type": user['user_type']}, 200
