@@ -110,10 +110,10 @@ const membersData: Member[] = [
 
 
 export default function MemberListScreen({ route, navigation }: any) {
-  const { sectorId, sectorName } = route.params;
+  const { sector, sectorName } = route.params;
   
   // Filtrar membros por setor
-  const sectorMembers = membersData.filter(member => member.sectorId === sectorId);
+  const sectorMembers = membersData.filter(member => member.sector === sector);
 
   return (
     <View style={styles.container}>

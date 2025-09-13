@@ -1,7 +1,7 @@
 export const Colors = {
-  // Primary colors - Updated to match PDF
-  primary: '#002366',      // Dark blue from PDF
-  secondary: '#000080',    // Medium blue from PDF
+  // Primary colors - Updated to darker blue with gradient
+  primary: '#001a4d',      // Darker blue
+  secondary: '#002366',    // Dark blue from PDF
   accent: '#FFD700',       // Metallic gold from PDF
   
   // Base colors
@@ -16,10 +16,10 @@ export const Colors = {
   surface: '#FFFFFF',
   card: '#FFFFFF',
   
-  // Gradient colors
-  gradientStart: '#002366',
-  gradientMiddle: '#003d82',
-  gradientEnd: '#000080',
+  // Gradient colors - Darker blue gradient
+  gradientStart: '#001a4d',    // Very dark blue
+  gradientMiddle: '#002366',   // Dark blue
+  gradientEnd: '#003d82',      // Medium dark blue
   
   // Text colors
   text: '#1E293B',

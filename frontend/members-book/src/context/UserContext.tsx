@@ -1,100 +1,84 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react'
-import type { User, UserType, MemberHierarchy } from "../types"
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Re-export types for convenience
-export type { UserType, MemberHierarchy } from "../types"
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
 
 interface UserContextType {
   user: User | null;
-  isLoading: boolean;
-  isAuthenticating: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
-  isAdmin: () => boolean;
-  isMember: () => boolean;
-  isGuest: () => boolean;
+  loading: boolean;
+  login: (userData: User) => Promise<boolean>;
+  logout: () => Promise<void>;
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined)
+interface UserProviderProps {
+  children: ReactNode;
+}
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export const useUser = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
+};
+
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  useEffect(() => {
+    checkUserSession();
+  }, []);
+
+  const checkUserSession = async () => {
     try {
-      setIsAuthenticating(true);
-      console.log('Login attempt:', email);
-      
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock login logic - replace with actual authentication
-      if (email && password) {
-        const mockUser: User = {
-          id: '1',
-          name: 'João Silva',
-          email: email,
-          userType: 'admin',
-          memberHierarchy: 'socios',
-          profileImage: 'https://via.placeholder.com/150',
-          joinDate: new Date('2023-01-15'),
-          lastActive: new Date(),
-        };
-        setUser(mockUser);
-        return true;
+      const userData = await AsyncStorage.getItem('user');
+      if (userData) {
+        setUser(JSON.parse(userData));
       }
-      return false;
     } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+      console.error('Error checking user session:', error);
     } finally {
-      setIsAuthenticating(false);
+      setLoading(false);
     }
   };
 
-  const logout = (): void => {
-    setIsAuthenticating(true);
-    // Simulate logout delay
-    setTimeout(() => {
+  const login = async (userData: User): Promise<boolean> => {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      return true;
+    } catch (error) {
+      console.error('Error saving user data:', error);
+      return false;
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    try {
+      await AsyncStorage.removeItem('user');
       setUser(null);
-      setIsAuthenticating(false);
-    }, 500);
+    } catch (error) {
+      console.error('Error removing user data:', error);
+    }
   };
 
-  // Simulate initial auth check
-  React.useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        // Simulate checking stored auth token
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        // For now, no stored auth, so user remains null
-      } catch (error) {
-        console.error('Auth check error:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    checkAuthStatus()
-  }, [])
-
-  const isAdmin = () => user?.userType === 'admin';
-  const isMember = () => user?.userType === 'member';
-  const isGuest = () => user?.userType === 'guest';
+  const value = {
+    user,
+    loading,
+    login,
+    logout,
+  };
 
   return (
-    <UserContext.Provider value={{ user, isLoading, isAuthenticating, login, logout, isAdmin, isMember, isGuest }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
-}
-
-export function useUser() {
-  const context = useContext(UserContext)
-  if (context === undefined) {
-    throw new Error("useUser must be used within a UserProvider")
-  }
-  return context
-}
+};

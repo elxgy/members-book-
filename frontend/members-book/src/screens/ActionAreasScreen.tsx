@@ -67,8 +67,8 @@ interface ActionAreasScreenProps {
 export default function ActionAreasScreen({ navigation }: ActionAreasScreenProps) {
   const handleSectorPress = (sector: string) => {
     navigation.navigate('MemberList', {
-      sectorName: sector,
-      sectorId: sectors.indexOf(sector) + 1
+      sector: sector,
+      sectorName: sector
     });
   };
 
@@ -105,38 +105,17 @@ export default function ActionAreasScreen({ navigation }: ActionAreasScreenProps
               {sectors.map((sector, index) => (
                 <TouchableOpacity
                   key={sector}
-                  style={[
-                    styles.sectorCard,
-                    { backgroundColor: `${sectorColors[sector] || Colors.accent}20` }
-                  ]}
+                  style={styles.sectorCard}
                   onPress={() => handleSectorPress(sector)}
                   activeOpacity={0.8}
                 >
-                  <LinearGradient
-                    colors={[
-                      `${sectorColors[sector] || Colors.accent}40`,
-                      `${sectorColors[sector] || Colors.accent}20`,
-                      'transparent'
-                    ]}
-                    style={styles.cardGradient}
-                  >
-                    <View style={[
-                      styles.sectorIcon, 
-                      { backgroundColor: sectorColors[sector] || Colors.accent }
-                    ]}>
-                      <Ionicons 
-                        name={sectorIcons[sector] as any || 'briefcase'} 
-                        size={24} 
-                        color={Colors.white} 
-                      />
-                    </View>
-                    
+                  <View style={styles.cardContent}>
                     <Text style={styles.sectorName}>{sector}</Text>
                     
                     <View style={styles.arrowContainer}>
-                      <Ionicons name="chevron-forward" size={20} color={Colors.white} />
+                      <Ionicons name="chevron-forward" size={20} color={Colors.accent} />
                     </View>
-                  </LinearGradient>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -223,36 +202,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectorCard: {
-    width: (width - 60) / 2,
-    height: 120,
-    borderRadius: 20,
-    marginBottom: 15,
+    width: (width - 80) / 2,
+    height: 75,
+    borderRadius: 0,
+    marginBottom: 12,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'transparent',
+    backgroundColor: 'rgba(100, 100, 100, 0.7)',
   },
-  cardGradient: {
+  cardContent: {
     flex: 1,
-    padding: 15,
+    padding: 12,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  sectorIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
+
   sectorName: {
     fontSize: 12,
     fontWeight: '700',
-    color: Colors.white,
+    color: Colors.accent,
     textAlign: 'center',
     letterSpacing: 0.5,
     lineHeight: 14,

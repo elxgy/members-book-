@@ -1,200 +1,159 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
-import { LinearGradient } from "expo-linear-gradient"
-import { Ionicons } from "@expo/vector-icons"
-import { Colors } from "../constants/Colors"
-import { StatusBar } from 'expo-status-bar';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
-const { width, height } = Dimensions.get('window');
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-export default function HomeScreen({ navigation }: any) {
+interface Props {
+  navigation: HomeScreenNavigationProp;
+}
+
+export default function HomeScreen({ navigation }: Props): React.JSX.Element {
+  const handleLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#0a0a0a" />
       <LinearGradient
-        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
+        colors={['#0a0a0a', '#1a1a2e', '#16213e']}
         style={styles.gradient}
       >
         <View style={styles.content}>
-          {/* Header Section with Logo */}
+          {/* Header Section */}
           <View style={styles.headerSection}>
-            <View style={styles.logoContainer}>
-              <View style={styles.logoCircle}>
-                <Ionicons name="people" size={60} color={Colors.text} />
+            <Text style={styles.comunidadeText}>COMUNIDADE</Text>
+            <Text style={styles.disruptionText}>DISRUPTION</Text>
+          </View>
+
+          {/* Main Title Section */}
+          <View style={styles.titleSection}>
+            <View style={styles.membersBookContainer}>
+              <Text style={styles.membersText}>MEMBERS</Text>
+              <View style={styles.bookRow}>
+                <Text style={styles.bookText}>BOOK</Text>
+                <Text style={styles.yearText}>2025</Text>
               </View>
             </View>
-            <Text style={styles.mainTitle}>MEMBERS BOOK</Text>
-            <Text style={styles.yearText}>2025</Text>
-            <Text style={styles.subtitle}>ENJOY</Text>
           </View>
 
-          {/* Decorative Elements */}
-          <View style={styles.decorativeSection}>
-            <View style={styles.decorativeLine} />
-            <View style={styles.decorativeCircle} />
-            <View style={styles.decorativeLine} />
-          </View>
-
-          {/* Enter Button */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.enterButton}
-              onPress={() => navigation.navigate('Login')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.enterButtonText}>ENTRAR</Text>
+          {/* Bottom Section */}
+          <View style={styles.bottomSection}>
+            <Text style={styles.enjoyText}>Enjoy</Text>
+            
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginButtonText}>ENTRAR</Text>
             </TouchableOpacity>
-          </View>
-
-          {/* Footer Section */}
-          <View style={styles.footerSection}>
-            <Text style={styles.footerText}>Conectando Profissionais</Text>
-            <View style={styles.footerDecorative}>
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-            </View>
           </View>
         </View>
       </LinearGradient>
-    </View>
-  )
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0a0a0a',
   },
   gradient: {
     flex: 1,
   },
   content: {
     flex: 1,
-    paddingHorizontal: 40,
     justifyContent: 'space-between',
-    paddingTop: 80,
-    paddingBottom: 60,
+    paddingHorizontal: 30,
+    paddingVertical: 60,
   },
   headerSection: {
     alignItems: 'center',
-    marginBottom: 40,
-  },
-  logoContainer: {
-    marginBottom: 30,
-  },
-  logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: Colors.metallicGold,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: Colors.metallicGoldDark,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-    borderWidth: 2,
-    borderColor: Colors.metallicGoldLight,
-  },
-  mainTitle: {
-    fontSize: 36,
-    fontWeight: '900',
-    color: Colors.textOnPrimary,
-    textAlign: 'center',
-    letterSpacing: 3,
-    marginBottom: 8,
-  },
-  yearText: {
-    fontSize: 48,
-    fontWeight: '900',
-    color: Colors.metallicGold,
-    textAlign: 'center',
-    letterSpacing: 2,
-    marginBottom: 8,
-    textShadowColor: Colors.metallicGoldDark,
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  subtitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: Colors.textOnPrimary,
-    textAlign: 'center',
-    letterSpacing: 4,
-    opacity: 0.9,
-  },
-  decorativeSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 30,
-  },
-  decorativeLine: {
-    width: 60,
-    height: 2,
-    backgroundColor: Colors.metallicGold,
-    opacity: 0.9,
-  },
-  decorativeCircle: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: Colors.metallicGold,
-    marginHorizontal: 15,
-    shadowColor: Colors.metallicGoldDark,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    marginVertical: 40,
-  },
-  enterButton: {
-    backgroundColor: Colors.metallicGold,
-    borderRadius: 15,
-    paddingHorizontal: 60,
-    paddingVertical: 20,
-    shadowColor: Colors.metallicGoldDark,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
-    borderWidth: 1,
-    borderColor: Colors.metallicGoldLight,
-  },
-  enterButtonText: {
-    color: Colors.text,
-    fontSize: 20,
-    fontWeight: '900',
-    letterSpacing: 2,
-  },
-  footerSection: {
-    alignItems: 'center',
     marginTop: 40,
   },
-  footerText: {
+  comunidadeText: {
     fontSize: 16,
-    color: Colors.textOnPrimary,
-    textAlign: 'center',
-    opacity: 0.8,
-    fontWeight: '500',
-    letterSpacing: 1,
-    marginBottom: 20,
+    fontWeight: '400',
+    color: '#FFFFFF',
+    letterSpacing: 3,
+    marginBottom: 5,
   },
-  footerDecorative: {
-    flexDirection: 'row',
+  disruptionText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#D4AF37',
+    letterSpacing: 2,
+  },
+  titleSection: {
+    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    marginTop: -50,
+  },
+  membersBookContainer: {
     alignItems: 'center',
   },
-  footerDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.metallicGold,
-    marginHorizontal: 6,
-    opacity: 0.8,
+  membersText: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    letterSpacing: 4,
+    marginBottom: 10,
   },
-})
+  bookRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  bookText: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    letterSpacing: 4,
+    marginRight: 15,
+  },
+  yearText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#D4AF37',
+    letterSpacing: 2,
+  },
+  bottomSection: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  enjoyText: {
+    fontSize: 32,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    fontStyle: 'italic',
+    marginBottom: 40,
+  },
+  loginButton: {
+    backgroundColor: '#D4AF37',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 8,
+    elevation: 3,
+    shadowColor: '#D4AF37',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  loginButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0a0a0a',
+    letterSpacing: 1,
+  },
+});

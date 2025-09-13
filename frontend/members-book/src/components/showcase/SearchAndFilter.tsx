@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: Colors.text,
+    color: Colors.textPrimary,
     paddingVertical: 0,
   },
   clearButton: {

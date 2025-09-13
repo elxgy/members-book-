@@ -1,306 +1,162 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import { Colors } from '../constants/Colors';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+} from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
-const { width, height } = Dimensions.get('window');
+type SegmentListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SegmentList'>;
 
-// Dados dos segmentos de negócio baseados na página 4 do PDF
-const businessSegments = [
-  {
-    id: 1,
-    name: 'Tecnologia',
-    icon: 'laptop',
-    description: 'Empresas de tecnologia e inovação',
-    memberCount: 25,
-    color: '#4A90E2'
-  },
-  {
-    id: 2,
-    name: 'Saúde',
-    icon: 'medical',
-    description: 'Profissionais e empresas da área da saúde',
-    memberCount: 18,
-    color: '#50C878'
-  },
-  {
-    id: 3,
-    name: 'Educação',
-    icon: 'school',
-    description: 'Instituições e profissionais da educação',
-    memberCount: 15,
-    color: '#FF6B6B'
-  },
-  {
-    id: 4,
-    name: 'Finanças',
-    icon: 'card',
-    description: 'Bancos, fintechs e consultoria financeira',
-    memberCount: 22,
-    color: '#FFD93D'
-  },
-  {
-    id: 5,
-    name: 'Varejo',
-    icon: 'storefront',
-    description: 'Comércio e varejo em geral',
-    memberCount: 20,
-    color: '#9B59B6'
-  },
-  {
-    id: 6,
-    name: 'Serviços',
-    icon: 'briefcase',
-    description: 'Prestação de serviços diversos',
-    memberCount: 16,
-    color: '#E67E22'
-  },
-  {
-    id: 7,
-    name: 'Indústria',
-    icon: 'construct',
-    description: 'Setor industrial e manufatura',
-    memberCount: 12,
-    color: '#34495E'
-  },
-  {
-    id: 8,
-    name: 'Agronegócio',
-    icon: 'leaf',
-    description: 'Agricultura e pecuária',
-    memberCount: 14,
-    color: '#27AE60'
-  }
+interface Props {
+  navigation: SegmentListScreenNavigationProp;
+}
+
+const segments = [
+  'ADVOCACIA',
+  'FOOD',
+  'ARQUITETURA',
+  'FRANQUIAS',
+  'COMÉRCIO',
+  'IMOBILIÁRIO',
+  'COMEX',
+  'LICITAÇÃO',
+  'CONSTRUTORA &\nINCORPORADORA',
+  'LOGÍSTICA &\nTRANSPORTE',
+  'CONSULTORIA',
+  'MARKETING',
+  'CONTÁBIL',
+  'RECURSOS\nHUMANOS',
+  'EDUCAÇÃO',
+  'SAÚDE',
+  'ENGENHARIA',
+  'SEGUROS',
+  'EVENTOS & PRODUÇÕES',
+  'TECNOLOGIA',
+  'FINANÇAS &\nINVESTIMENTOS',
+  'VEÍCULOS',
 ];
 
-export default function SegmentListScreen({ navigation }: any) {
-  const handleSegmentPress = (segment: any) => {
-    navigation.navigate('MemberList', { 
-      segmentId: segment.id,
-      segmentName: segment.name 
-    });
+export default function SegmentListScreen({ navigation }: Props): React.JSX.Element {
+  const handleSegmentPress = (segment: string) => {
+    // Aqui você pode implementar a navegação para a lista de membros do segmento
+    console.log('Segmento selecionado:', segment);
   };
 
+  const renderSegmentButton = (segment: string, index: number) => (
+    <TouchableOpacity
+      key={index}
+      style={styles.segmentButton}
+      onPress={() => handleSegmentPress(segment)}
+    >
+      <Text style={styles.segmentText}>{segment}</Text>
+    </TouchableOpacity>
+  );
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
-        style={styles.gradient}
-      >
-        <View style={styles.content}>
-          {/* Header Section */}
-          <View style={styles.headerSection}>
-            <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Ionicons name="arrow-back" size={24} color={Colors.white} />
-            </TouchableOpacity>
-            
-            <View style={styles.titleContainer}>
-              <Text style={styles.mainTitle}>SEGMENTOS</Text>
-              <Text style={styles.subtitle}>DE NEGÓCIO</Text>
-            </View>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.mainTitle}>LISTA DE SEGMENTOS</Text>
+      </View>
 
-          {/* Decorative Elements */}
-          <View style={styles.decorativeSection}>
-            <View style={styles.decorativeLine} />
-            <View style={styles.decorativeCircle} />
-            <View style={styles.decorativeLine} />
-          </View>
-
-          {/* Segments List */}
-          <ScrollView 
-            style={styles.segmentsList}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.segmentsContainer}
-          >
-            {businessSegments.map((segment) => (
-              <TouchableOpacity
-                key={segment.id}
-                style={styles.segmentCard}
-                onPress={() => handleSegmentPress(segment)}
-                activeOpacity={0.8}
-              >
-                <View style={[styles.segmentIcon, { backgroundColor: segment.color }]}>
-                  <Ionicons name={segment.icon as any} size={28} color={Colors.white} />
-                </View>
-                
-                <View style={styles.segmentInfo}>
-                  <Text style={styles.segmentName}>{segment.name}</Text>
-                  <Text style={styles.segmentDescription}>{segment.description}</Text>
-                  <View style={styles.memberCountContainer}>
-                    <Ionicons name="people" size={16} color={Colors.accent} />
-                    <Text style={styles.memberCount}>{segment.memberCount} membros</Text>
-                  </View>
-                </View>
-                
-                <View style={styles.arrowContainer}>
-                  <Ionicons name="chevron-forward" size={24} color={Colors.accent} />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          {/* Footer Section */}
-          <View style={styles.footerSection}>
-            <Text style={styles.footerText}>Escolha um segmento para ver os membros</Text>
-            <View style={styles.footerDecorative}>
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-            </View>
-          </View>
+      {/* Segments Grid */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.segmentsContainer}>
+          {segments.map((segment, index) => renderSegmentButton(segment, index))}
         </View>
-      </LinearGradient>
-    </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={styles.comunidadeText}>COMUNIDADE</Text>
+          <Text style={styles.disruptionText}>DISRUPTION</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
-  gradient: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
+  header: {
     paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  headerSection: {
-    alignItems: 'center',
-    marginBottom: 20,
-    position: 'relative',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    padding: 10,
-    zIndex: 1,
-  },
-  titleContainer: {
+    paddingTop: 30,
+    paddingBottom: 40,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
   mainTitle: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: Colors.white,
-    textAlign: 'center',
-    letterSpacing: 2,
-    marginBottom: 5,
-  },
-  subtitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: Colors.accent,
+    fontWeight: 'bold',
+    color: '#D4AF37',
     textAlign: 'center',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
-  decorativeSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-  },
-  decorativeLine: {
-    width: 50,
-    height: 2,
-    backgroundColor: Colors.accent,
-    opacity: 0.8,
-  },
-  decorativeCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: Colors.accent,
-    marginHorizontal: 12,
-  },
-  segmentsList: {
+  scrollView: {
     flex: 1,
   },
   segmentsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  segmentCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRadius: 15,
-    padding: 20,
+  segmentButton: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#D4AF37',
+    borderRadius: 0,
+    paddingVertical: 18,
+    paddingHorizontal: 12,
     marginBottom: 15,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  segmentIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
+    minHeight: 65,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
-  segmentInfo: {
-    flex: 1,
-  },
-  segmentName: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: Colors.primary,
-    marginBottom: 5,
-  },
-  segmentDescription: {
-    fontSize: 14,
-    color: Colors.darkGray,
-    marginBottom: 8,
-    lineHeight: 18,
-  },
-  memberCountContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  memberCount: {
-    fontSize: 12,
-    color: Colors.accent,
+  segmentText: {
+    fontSize: 11,
     fontWeight: '600',
-    marginLeft: 5,
-  },
-  arrowContainer: {
-    padding: 5,
-  },
-  footerSection: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: Colors.white,
+    color: '#1a1a2e',
     textAlign: 'center',
-    opacity: 0.8,
-    fontWeight: '500',
-    marginBottom: 15,
+    lineHeight: 14,
+    letterSpacing: 0.3,
   },
-  footerDecorative: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  footer: {
     alignItems: 'center',
+    paddingVertical: 30,
+    paddingBottom: 50,
   },
-  footerDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: Colors.accent,
-    marginHorizontal: 4,
-    opacity: 0.7,
+  comunidadeText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#888',
+    letterSpacing: 1,
+    marginBottom: 2,
+  },
+  disruptionText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#D4AF37',
+    letterSpacing: 1,
   },
 });

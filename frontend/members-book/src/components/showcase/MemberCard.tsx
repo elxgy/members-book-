@@ -78,7 +78,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
             onPress={handleConnect}
             activeOpacity={0.7}
           >
-            <Ionicons name="add-outline" size={16} color={Colors.text} />
+            <Ionicons name="add-outline" size={16} color={Colors.textPrimary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.text,
+    color: Colors.textPrimary,
     marginBottom: 4,
   },
   memberTitle: {

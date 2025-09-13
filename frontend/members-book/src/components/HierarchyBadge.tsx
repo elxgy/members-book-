@@ -1,91 +1,91 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native'
-import { Ionicons } from "@expo/vector-icons"
-import { Colors } from "../constants/Colors"
-import type { MemberHierarchy } from "../types"
+import { View, Text, StyleSheet } from 'react-native';
+import { Colors } from '../constants/Colors';
 
 interface HierarchyBadgeProps {
-  hierarchy: MemberHierarchy
-  size?: "small" | "medium" | "large"
-  showIcon?: boolean
+  hierarchy: 'socios' | 'infinity' | 'disruption';
+  size?: 'small' | 'medium' | 'large';
 }
 
-export default function HierarchyBadge({ hierarchy, size = "medium", showIcon = true }: HierarchyBadgeProps) {
-  const getHierarchyConfig = (hierarchy: MemberHierarchy) => {
+const HierarchyBadge: React.FC<HierarchyBadgeProps> = ({ hierarchy, size = 'medium' }) => {
+  const getHierarchyConfig = () => {
     switch (hierarchy) {
-      case "socios":
+      case 'socios':
         return {
-          label: "Sócios",
-          colors: Colors.socios,
-          icon: "star" as keyof typeof Ionicons.glyphMap,
-        }
-      case "infinity":
+          backgroundColor: Colors.socios.background,
+          textColor: Colors.socios.text,
+          label: 'SÓCIOS',
+        };
+      case 'infinity':
         return {
-          label: "Infinity",
-          colors: Colors.infinity,
-          icon: "infinite" as keyof typeof Ionicons.glyphMap,
-        }
-      case "disruption":
+          backgroundColor: Colors.infinity.background,
+          textColor: Colors.infinity.text,
+          label: 'INFINITY',
+        };
+      case 'disruption':
         return {
-          label: "Disruption",
-          colors: Colors.disruption,
-          icon: "flash" as keyof typeof Ionicons.glyphMap,
-        }
+          backgroundColor: Colors.disruption.background,
+          textColor: Colors.disruption.text,
+          label: 'DISRUPTION',
+        };
       default:
         return {
-          label: "Membro",
-          colors: Colors.socios,
-          icon: "person" as keyof typeof Ionicons.glyphMap,
-        }
+          backgroundColor: Colors.primary,
+          textColor: Colors.textOnPrimary,
+          label: 'MEMBER',
+        };
     }
-  }
+  };
 
-  const config = getHierarchyConfig(hierarchy)
-  const sizeStyles = getSizeStyles(size)
+  const config = getHierarchyConfig();
+  const sizeStyles = getSizeStyles(size);
 
   return (
-    <View style={[styles.badge, { backgroundColor: config.colors.background }, sizeStyles.container]}>
-      {showIcon && (
-        <Ionicons name={config.icon} size={sizeStyles.iconSize} color={config.colors.text} style={styles.icon} />
-      )}
-      <Text style={[styles.text, { color: config.colors.text }, sizeStyles.text]}>{config.label}</Text>
+    <View style={[
+      styles.badge,
+      sizeStyles.container,
+      { backgroundColor: config.backgroundColor }
+    ]}>
+      <Text style={[
+        styles.badgeText,
+        sizeStyles.text,
+        { color: config.textColor }
+      ]}>
+        {config.label}
+      </Text>
     </View>
-  )
-}
+  );
+};
 
-const getSizeStyles = (size: "small" | "medium" | "large") => {
+const getSizeStyles = (size: 'small' | 'medium' | 'large') => {
   switch (size) {
-    case "small":
+    case 'small':
       return {
-        container: { paddingHorizontal: 8, paddingVertical: 4 },
-        text: { fontSize: 12 },
-        iconSize: 12,
-      }
-    case "large":
-      return {
-        container: { paddingHorizontal: 16, paddingVertical: 8 },
-        text: { fontSize: 16 },
-        iconSize: 18,
-      }
-    default:
+        container: { paddingHorizontal: 6, paddingVertical: 2 },
+        text: { fontSize: 8 },
+      };
+    case 'large':
       return {
         container: { paddingHorizontal: 12, paddingVertical: 6 },
-        text: { fontSize: 14 },
-        iconSize: 16,
-      }
+        text: { fontSize: 12 },
+      };
+    default: // medium
+      return {
+        container: { paddingHorizontal: 8, paddingVertical: 4 },
+        text: { fontSize: 10 },
+      };
   }
-}
+};
 
 const styles = StyleSheet.create({
   badge: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
   },
-  icon: {
-    marginRight: 4,
+  badgeText: {
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
-  text: {
-    fontWeight: "bold",
-  },
-})
+});
+
+export default HierarchyBadge;
