@@ -1,189 +1,138 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-
-import { Colors } from '../constants/Colors';
 import { useUser } from '../context/UserContext';
+import { Colors } from '../constants/Colors';
 
 const { width, height } = Dimensions.get('window');
 
-interface LoginScreenProps {}
-
-const LoginScreen: React.FC<LoginScreenProps> = () => {
+export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<'email' | 'biometric'>('email');
-  
-  const { login, isAuthenticating } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useUser();
 
-  // Mock login function
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
-    
-    try {
-      // Use the login method from UserContext
-      const success = await login(email, password);
-      
-      if (!success) {
-        Alert.alert('Erro', 'Credenciais inválidas.');
-        return;
-      }
-    } catch (error) {
-      Alert.alert('Erro', 'Falha no login. Tente novamente.');
-    }
-  };
 
-  // Mock biometric login
-  const handleBiometricLogin = async () => {
+    setIsLoading(true);
     try {
-      // Use mock credentials for biometric login
-      const success = await login('biometric@membersbook.com', 'biometric');
-      
-      if (!success) {
-        Alert.alert('Erro', 'Falha na autenticação biométrica.');
-        return;
-      }
+      await login(email, password);
+      // Após login bem-sucedido, navegar para a lista de segmentos
+      navigation.navigate('SegmentList');
     } catch (error) {
-      Alert.alert('Erro', 'Falha na autenticação biométrica.');
+      Alert.alert('Erro', 'Email ou senha incorretos.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <View style={styles.container}>
       <StatusBar style="light" />
       <LinearGradient
         colors={[Colors.primary, Colors.secondary]}
         style={styles.gradient}
       >
         <View style={styles.content}>
-          {/* Logo/Title Section */}
+          {/* Header Section */}
           <View style={styles.headerSection}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={24} color={Colors.white} />
+            </TouchableOpacity>
+            
             <View style={styles.logoContainer}>
-              <Ionicons name="people-circle" size={80} color={Colors.accent} />
+              <View style={styles.logoCircle}>
+                <Ionicons name="people" size={50} color={Colors.primary} />
+              </View>
             </View>
-            <Text style={styles.title}>Members Book</Text>
-            <Text style={styles.subtitle}>Conectando Profissionais</Text>
+            <Text style={styles.mainTitle}>MEMBERS BOOK</Text>
+            <Text style={styles.yearText}>2025</Text>
+            <Text style={styles.subtitle}>LOGIN</Text>
+          </View>
+
+          {/* Decorative Elements */}
+          <View style={styles.decorativeSection}>
+            <View style={styles.decorativeLine} />
+            <View style={styles.decorativeCircle} />
+            <View style={styles.decorativeLine} />
           </View>
 
           {/* Login Form */}
           <View style={styles.formContainer}>
-            {loginMethod === 'email' ? (
-              <>
-                <View style={styles.inputContainer}>
-                  <Ionicons name="mail-outline" size={20} color={Colors.accent} style={styles.inputIcon} />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor={Colors.text.secondary}
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                  />
-                </View>
+            <View style={styles.inputContainer}>
+              <Ionicons name="mail" size={20} color={Colors.accent} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor={Colors.lightGray}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
 
-                <View style={styles.inputContainer}>
-                  <Ionicons name="lock-closed-outline" size={20} color={Colors.accent} style={styles.inputIcon} />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Senha"
-                    placeholderTextColor={Colors.text.secondary}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setShowPassword(!showPassword)}
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                  >
-                    <Ionicons 
-                      name={showPassword ? "eye-off-outline" : "eye-outline"} 
-                      size={20} 
-                      color={Colors.accent} 
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                <TouchableOpacity
-                  style={[styles.loginButton, isAuthenticating && styles.loginButtonDisabled]}
-                  onPress={handleLogin}
-                  disabled={isAuthenticating}
-                  activeOpacity={0.8}
-                >
-                  {isAuthenticating ? (
-                    <ActivityIndicator color={Colors.primary} size="small" />
-                  ) : (
-                    <Text style={styles.loginButtonText}>Entrar</Text>
-                  )}
-                </TouchableOpacity>
-              </>
-            ) : (
+            <View style={styles.inputContainer}>
+              <Ionicons name="lock-closed" size={20} color={Colors.accent} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Senha"
+                placeholderTextColor={Colors.lightGray}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
               <TouchableOpacity
-                style={[styles.biometricButton, isAuthenticating && styles.loginButtonDisabled]}
-                onPress={handleBiometricLogin}
-                disabled={isAuthenticating}
-                activeOpacity={0.8}
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
               >
-                {isAuthenticating ? (
-                  <ActivityIndicator color={Colors.white} size="small" />
-                ) : (
-                  <>
-                    <Ionicons name="finger-print" size={40} color={Colors.white} />
-                    <Text style={styles.biometricButtonText}>Autenticação Biométrica</Text>
-                  </>
-                )}
+                <Ionicons
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color={Colors.accent}
+                />
               </TouchableOpacity>
-            )}
+            </View>
 
-            {/* Switch Login Method */}
             <TouchableOpacity
-              style={styles.switchMethodButton}
-              onPress={() => setLoginMethod(loginMethod === 'email' ? 'biometric' : 'email')}
-              hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+              activeOpacity={0.8}
             >
-              <Text style={styles.switchMethodText}>
-                {loginMethod === 'email' ? 'Usar Biometria' : 'Usar Email/Senha'}
+              <Text style={styles.loginButtonText}>
+                {isLoading ? 'ENTRANDO...' : 'ENTRAR'}
               </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Demo Instructions */}
-          <View style={styles.demoSection}>
-            <Text style={styles.demoTitle}>Demo - Tipos de Usuário:</Text>
-            <Text style={styles.demoText}>• admin@test.com - Acesso Administrativo</Text>
-            <Text style={styles.demoText}>• member@test.com - Acesso de Membro</Text>
-            <Text style={styles.demoText}>• guest@test.com - Acesso de Visitante</Text>
-            <Text style={styles.demoNote}>Qualquer senha funciona nesta demonstração</Text>
+          {/* Footer Section */}
+          <View style={styles.footerSection}>
+            <Text style={styles.footerText}>Acesso Exclusivo para Membros</Text>
+            <View style={styles.footerDecorative}>
+              <View style={styles.footerDot} />
+              <View style={styles.footerDot} />
+              <View style={styles.footerDot} />
+            </View>
           </View>
         </View>
       </LinearGradient>
-    </KeyboardAvoidingView>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -194,40 +143,92 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 30,
-    justifyContent: 'center',
+    paddingHorizontal: 40,
+    justifyContent: 'space-between',
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   headerSection: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 0,
+    left: -20,
+    padding: 10,
+    zIndex: 1,
   },
   logoContainer: {
     marginBottom: 20,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: Colors.white,
-    marginBottom: 8,
-    textAlign: 'center',
+  logoCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.accent,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
-  subtitle: {
-    fontSize: 16,
+  mainTitle: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: Colors.white,
+    textAlign: 'center',
+    letterSpacing: 2,
+    marginBottom: 5,
+  },
+  yearText: {
+    fontSize: 36,
+    fontWeight: '900',
     color: Colors.accent,
     textAlign: 'center',
+    letterSpacing: 1,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.white,
+    textAlign: 'center',
+    letterSpacing: 3,
     opacity: 0.9,
   },
+  decorativeSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  decorativeLine: {
+    width: 50,
+    height: 2,
+    backgroundColor: Colors.accent,
+    opacity: 0.8,
+  },
+  decorativeCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: Colors.accent,
+    marginHorizontal: 12,
+  },
   formContainer: {
-    marginBottom: 40,
+    width: '100%',
+    marginVertical: 20,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.white,
     borderRadius: 12,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    height: 56,
+    marginBottom: 15,
+    paddingHorizontal: 15,
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -235,87 +236,63 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   inputIcon: {
-    marginRight: 12,
+    marginRight: 10,
   },
   input: {
     flex: 1,
+    height: 50,
     fontSize: 16,
-    color: Colors.text.primary,
-    height: '100%',
+    color: Colors.primary,
+    fontWeight: '500',
   },
   eyeIcon: {
-    padding: 4,
+    padding: 5,
   },
   loginButton: {
     backgroundColor: Colors.accent,
     borderRadius: 12,
-    height: 56,
-    justifyContent: 'center',
+    paddingVertical: 15,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 10,
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   loginButtonDisabled: {
-    opacity: 0.6,
+    opacity: 0.7,
   },
   loginButtonText: {
     color: Colors.primary,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '900',
+    letterSpacing: 1,
   },
-  biometricButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 12,
-    height: 120,
+  footerSection: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 14,
+    color: Colors.white,
+    textAlign: 'center',
+    opacity: 0.8,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+    marginBottom: 15,
+  },
+  footerDecorative: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
-    borderWidth: 2,
-    borderColor: Colors.accent,
   },
-  biometricButtonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: '600',
-    marginTop: 8,
-  },
-  switchMethodButton: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  switchMethodText: {
-    color: Colors.accent,
-    fontSize: 16,
-    fontWeight: '500',
-    textDecorationLine: 'underline',
-  },
-  demoSection: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
-    padding: 20,
-    marginTop: 20,
-  },
-  demoTitle: {
-    color: Colors.accent,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  demoText: {
-    color: Colors.white,
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  demoNote: {
-    color: Colors.accent,
-    fontSize: 12,
-    fontStyle: 'italic',
-    marginTop: 8,
+  footerDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.accent,
+    marginHorizontal: 4,
+    opacity: 0.7,
   },
 });
-
-export default LoginScreen;

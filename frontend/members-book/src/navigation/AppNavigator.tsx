@@ -11,6 +11,8 @@ import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AdminScreen from '../screens/AdminScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SegmentListScreen from '../screens/SegmentListScreen';
+import MemberListScreen from '../screens/MemberListScreen';
 
 // Components
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -120,10 +122,17 @@ export default function AppNavigator() {
     >
       {user ? (
         // User is authenticated
-        <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+        <>
+          <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+          <Stack.Screen name="SegmentList" component={SegmentListScreen} />
+          <Stack.Screen name="MemberList" component={MemberListScreen} />
+        </>
       ) : (
         // User is not authenticated
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </>
       )}
       
       {/* Additional screens that can be navigated to */}

@@ -1,100 +1,63 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
-import { useUser } from "../context/UserContext"
 import { Colors } from "../constants/Colors"
+import { StatusBar } from 'expo-status-bar';
+
+const { width, height } = Dimensions.get('window');
 
 export default function HomeScreen({ navigation }: any) {
-  const { user, isAdmin, isMember, isGuest } = useUser()
-  const isAdminUser = isAdmin()
-  const isMemberUser = isMember()
-  const isGuestUser = isGuest()
-
-  const getUserTypeLabel = () => {
-    if (isAdminUser) return "Administrador"
-    if (isMemberUser) return "Membro"
-    if (isGuestUser) return "Convidado"
-    return "Usuário"
-  }
-
-  const getHierarchyLabel = () => {
-    if (!user?.memberHierarchy) return ""
-    switch (user.memberHierarchy) {
-      case "socios":
-        return "Sócios"
-      case "infinity":
-        return "Infinity"
-      case "disruption":
-        return "Disruption"
-      default:
-        return ""
-    }
-  }
-
   return (
-    <LinearGradient colors={[Colors.primary, "#2c3e50"]} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Bem-vindo ao</Text>
-          <Text style={styles.titleText}>Member Book</Text>
-          <Text style={styles.subtitleText}>Conectando empresários de sucesso</Text>
-        </View>
-
-        {/* User Info Card */}
-        <View style={styles.userCard}>
-          <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user?.name || "Usuário"}</Text>
-            <Text style={styles.userType}>{getUserTypeLabel()}</Text>
-            {user?.memberHierarchy && <Text style={styles.userHierarchy}>{getHierarchyLabel()}</Text>}
-            {/* User company info would go here if available */}
-          </View>
-        </View>
-
-        {/* Quick Actions */}
-        <View style={styles.actionsContainer}>
-          <Text style={styles.sectionTitle}>Acesso Rápido</Text>
-
-          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate("Setores")}>
-            <Ionicons name="grid" size={24} color={Colors.gold} />
-            <Text style={styles.actionText}>Ver Setores</Text>
-            <Ionicons name="chevron-forward" size={20} color={Colors.darkGray} />
-          </TouchableOpacity>
-
-          {isMemberUser && (
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons name="chatbubbles" size={24} color={Colors.gold} />
-              <Text style={styles.actionText}>Mensagens</Text>
-              <Ionicons name="chevron-forward" size={20} color={Colors.darkGray} />
-            </TouchableOpacity>
-          )}
-
-          {isAdminUser && (
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons name="settings" size={24} color={Colors.gold} />
-              <Text style={styles.actionText}>Gerenciar Membros</Text>
-              <Ionicons name="chevron-forward" size={20} color={Colors.darkGray} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Stats */}
-        <View style={styles.statsContainer}>
-          <Text style={styles.sectionTitle}>Estatísticas</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>22</Text>
-              <Text style={styles.statLabel}>Setores</Text>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <LinearGradient
+        colors={[Colors.primary, Colors.secondary]}
+        style={styles.gradient}
+      >
+        <View style={styles.content}>
+          {/* Header Section with Logo */}
+          <View style={styles.headerSection}>
+            <View style={styles.logoContainer}>
+              <View style={styles.logoCircle}>
+                <Ionicons name="people" size={60} color={Colors.primary} />
+              </View>
             </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>150+</Text>
-              <Text style={styles.statLabel}>Membros</Text>
+            <Text style={styles.mainTitle}>MEMBERS BOOK</Text>
+            <Text style={styles.yearText}>2025</Text>
+            <Text style={styles.subtitle}>ENJOY</Text>
+          </View>
+
+          {/* Decorative Elements */}
+          <View style={styles.decorativeSection}>
+            <View style={styles.decorativeLine} />
+            <View style={styles.decorativeCircle} />
+            <View style={styles.decorativeLine} />
+          </View>
+
+          {/* Enter Button */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.enterButton}
+              onPress={() => navigation.navigate('Login')}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.enterButtonText}>ENTRAR</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Footer Section */}
+          <View style={styles.footerSection}>
+            <Text style={styles.footerText}>Conectando Profissionais</Text>
+            <View style={styles.footerDecorative}>
+              <View style={styles.footerDot} />
+              <View style={styles.footerDot} />
+              <View style={styles.footerDot} />
             </View>
           </View>
         </View>
-      </ScrollView>
-    </LinearGradient>
+      </LinearGradient>
+    </View>
   )
 }
 
@@ -102,123 +65,124 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollContent: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+  gradient: {
+    flex: 1,
   },
-  header: {
-    alignItems: "center",
+  content: {
+    flex: 1,
+    paddingHorizontal: 40,
+    justifyContent: 'space-between',
+    paddingTop: 80,
+    paddingBottom: 60,
+  },
+  headerSection: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoContainer: {
     marginBottom: 30,
   },
-  welcomeText: {
-    fontSize: 16,
+  logoCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: Colors.accent,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  mainTitle: {
+    fontSize: 36,
+    fontWeight: '900',
     color: Colors.white,
+    textAlign: 'center',
+    letterSpacing: 3,
+    marginBottom: 8,
+  },
+  yearText: {
+    fontSize: 48,
+    fontWeight: '900',
+    color: Colors.accent,
+    textAlign: 'center',
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: Colors.white,
+    textAlign: 'center',
+    letterSpacing: 4,
+    opacity: 0.9,
+  },
+  decorativeSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 30,
+  },
+  decorativeLine: {
+    width: 60,
+    height: 2,
+    backgroundColor: Colors.accent,
     opacity: 0.8,
   },
-  titleText: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: Colors.gold,
-    marginVertical: 5,
+  decorativeCircle: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: Colors.accent,
+    marginHorizontal: 15,
   },
-  subtitleText: {
-    fontSize: 14,
-    color: Colors.white,
-    opacity: 0.7,
-    textAlign: "center",
+  buttonContainer: {
+    alignItems: 'center',
+    marginVertical: 40,
   },
-  userCard: {
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+  enterButton: {
+    backgroundColor: Colors.accent,
+    borderRadius: 15,
+    paddingHorizontal: 60,
+    paddingVertical: 20,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
-  userInfo: {
-    alignItems: "center",
-  },
-  userName: {
+  enterButtonText: {
+    color: Colors.primary,
     fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.primary,
-    marginBottom: 5,
+    fontWeight: '900',
+    letterSpacing: 2,
   },
-  userType: {
-    fontSize: 14,
-    color: Colors.gold,
-    fontWeight: "600",
+  footerSection: {
+    alignItems: 'center',
+    marginTop: 40,
   },
-  userHierarchy: {
-    fontSize: 12,
-    color: Colors.darkGray,
-    marginTop: 2,
-  },
-  userCompany: {
-    fontSize: 14,
-    color: Colors.primary,
-    marginTop: 5,
-  },
-  actionsContainer: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.white,
-    marginBottom: 15,
-  },
-  actionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  actionText: {
-    flex: 1,
+  footerText: {
     fontSize: 16,
-    color: Colors.primary,
-    marginLeft: 12,
-    fontWeight: "500",
-  },
-  statsContainer: {
+    color: Colors.white,
+    textAlign: 'center',
+    opacity: 0.8,
+    fontWeight: '500',
+    letterSpacing: 1,
     marginBottom: 20,
   },
-  statsGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  footerDecorative: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  statCard: {
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    padding: 20,
-    alignItems: "center",
-    flex: 0.48,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.gold,
-    marginBottom: 5,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: Colors.primary,
+  footerDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.accent,
+    marginHorizontal: 6,
+    opacity: 0.7,
   },
 })
