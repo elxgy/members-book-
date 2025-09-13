@@ -16,12 +16,12 @@ export default function SectorListScreen({ navigation }: any) {
         <Text style={styles.sectorName}>{item}</Text>
         <Text style={styles.memberCount}>{getSectorMemberCount(item)} membros</Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color={Colors.gold} />
+      <Ionicons name="chevron-forward" size={20} color={Colors.metallicGold} />
     </TouchableOpacity>
   )
 
   return (
-    <LinearGradient colors={[Colors.primary, "#2c3e50"]} style={styles.container}>
+    <LinearGradient colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     marginBottom: 5,
   },
   headerSubtitle: {
     fontSize: 14,
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     opacity: 0.8,
     textAlign: "center",
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: Colors.gold,
+    borderColor: Colors.metallicGold,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   memberCount: {
     fontSize: 12,
-    color: Colors.darkGray,
+    color: Colors.textSecondary,
     textAlign: "center",
   },
 })

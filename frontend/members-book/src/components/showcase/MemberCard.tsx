@@ -70,7 +70,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
         
         <View style={styles.cardFooter}>
           <View style={styles.connectionsContainer}>
-            <Ionicons name="people-outline" size={14} color={Colors.text.secondary} />
+            <Ionicons name="people-outline" size={14} color={Colors.textSecondary} />
             <Text style={styles.connectionsText}>{member.connections}</Text>
           </View>
           <TouchableOpacity 
@@ -78,7 +78,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
             onPress={handleConnect}
             activeOpacity={0.7}
           >
-            <Ionicons name="add-outline" size={16} color={Colors.primary} />
+            <Ionicons name="add-outline" size={16} color={Colors.text} />
           </TouchableOpacity>
         </View>
       </View>
@@ -89,11 +89,11 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
 const styles = StyleSheet.create({
   memberCard: {
     width: cardWidth,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.backgroundSecondary,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
   },
   onlineIndicator: {
     position: 'absolute',
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: Colors.interactive.success,
+    backgroundColor: Colors.metallicGold,
     borderWidth: 2,
-    borderColor: Colors.background.secondary,
+    borderColor: Colors.backgroundSecondary,
   },
   cardContent: {
     flex: 1,
@@ -145,17 +145,17 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 4,
   },
   memberTitle: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginBottom: 2,
   },
   memberCompany: {
     fontSize: 12,
-    color: Colors.text.tertiary,
+    color: Colors.textSecondary,
     marginBottom: 12,
   },
   expertiseContainer: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   expertiseTag: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.backgroundSecondary,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   expertiseText: {
     fontSize: 10,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     fontWeight: '500',
   },
   cardFooter: {
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   },
   connectionsText: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginLeft: 4,
     fontWeight: '500',
   },
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.backgroundSecondary,
     justifyContent: 'center',
     alignItems: 'center',
   },

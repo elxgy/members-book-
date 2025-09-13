@@ -14,7 +14,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, profileImageUri,
           </Text>
         </View>
         <TouchableOpacity onPress={onEditPress} style={styles.editImageButton}>
-          <Ionicons name="camera" size={16} color={Colors.white} />
+          <Ionicons name="camera" size={16} color={Colors.textOnPrimary} />
         </TouchableOpacity>
       </View>
       
@@ -33,7 +33,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ user, profileImageUri,
 
 const styles = StyleSheet.create({
   profileCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.backgroundSecondary,
     marginHorizontal: 20,
     marginTop: -40,
     borderRadius: 20,
@@ -53,27 +53,27 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.text,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileImageText: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
   },
   editImageButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     borderRadius: 15,
     width: 30,
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: Colors.white,
+    borderColor: Colors.textOnPrimary,
   },
   profileInfo: {
     alignItems: 'center',
@@ -81,12 +81,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 5,
   },
   userEmail: {
     fontSize: 16,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginBottom: 10,
   },
   hierarchyBadge: {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   hierarchyText: {
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     fontSize: 12,
     fontWeight: 'bold',
   },

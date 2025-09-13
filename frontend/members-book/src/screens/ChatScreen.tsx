@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/Colors';
 import { useUser } from '../context/UserContext';
@@ -180,9 +181,12 @@ const ChatScreen: React.FC = () => {
   if (!selectedRoom) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
+        <LinearGradient
+          colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
+          style={styles.header}
+        >
           <Text style={styles.headerTitle}>Conversas</Text>
-        </View>
+        </LinearGradient>
         
         {roomsLoading ? (
           <View style={styles.loadingContainer}>
@@ -221,13 +225,16 @@ const ChatScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.chatHeader}>
+      <LinearGradient
+        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
+        style={styles.chatHeader}
+      >
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => setSelectedRoom(null)}
           activeOpacity={0.7}
         >
-          <Ionicons name="arrow-back" size={24} color={Colors.text.primary} />
+          <Ionicons name="arrow-back" size={24} color={Colors.textOnPrimary} />
         </TouchableOpacity>
         
         <View style={styles.chatHeaderInfo}>
@@ -240,13 +247,13 @@ const ChatScreen: React.FC = () => {
         </View>
         
         <TouchableOpacity style={styles.chatHeaderAction} activeOpacity={0.7}>
-          <Ionicons name="call" size={24} color={Colors.primary} />
+          <Ionicons name="call" size={24} color={Colors.metallicGold} />
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.chatHeaderAction} activeOpacity={0.7}>
-          <Ionicons name="videocam" size={24} color={Colors.primary} />
+          <Ionicons name="videocam" size={24} color={Colors.metallicGold} />
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
       {messagesLoading ? (
         <View style={styles.loadingContainer}>
@@ -281,20 +288,21 @@ const ChatScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
   header: {
     paddingTop: 60,
-    paddingBottom: 20,
+    paddingBottom: 25,
     paddingHorizontal: 20,
-    backgroundColor: Colors.background.primary,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text.primary,
+    fontSize: 28,
+    fontWeight: '900',
+    color: Colors.textOnPrimary,
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   loadingContainer: {
     flex: 1,
@@ -304,7 +312,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
   },
   errorContainer: {
     flex: 1,
@@ -324,10 +332,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: Colors.background.primary,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    paddingVertical: 15,
+    paddingTop: 50,
   },
   backButton: {
     padding: 8,
@@ -339,12 +345,13 @@ const styles = StyleSheet.create({
   chatHeaderTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.text.primary,
+    color: Colors.textOnPrimary,
   },
   chatHeaderSubtitle: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: Colors.textOnPrimary,
     marginTop: 2,
+    opacity: 0.8,
   },
   chatHeaderAction: {
     padding: 8,
@@ -352,7 +359,7 @@ const styles = StyleSheet.create({
   },
   messagesList: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
   messagesContent: {
     paddingVertical: 8,

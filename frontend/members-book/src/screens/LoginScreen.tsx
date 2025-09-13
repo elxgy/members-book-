@@ -37,7 +37,7 @@ export default function LoginScreen({ navigation }: any) {
     <View style={styles.container}>
       <StatusBar style="light" />
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
         style={styles.gradient}
       >
         <View style={styles.content}>
@@ -47,12 +47,12 @@ export default function LoginScreen({ navigation }: any) {
               style={styles.backButton}
               onPress={() => navigation.goBack()}
             >
-              <Ionicons name="arrow-back" size={24} color={Colors.white} />
+              <Ionicons name="arrow-back" size={24} color={Colors.textOnPrimary} />
             </TouchableOpacity>
             
             <View style={styles.logoContainer}>
               <View style={styles.logoCircle}>
-                <Ionicons name="people" size={50} color={Colors.primary} />
+                <Ionicons name="people" size={50} color={Colors.text} />
               </View>
             </View>
             <Text style={styles.mainTitle}>MEMBERS BOOK</Text>
@@ -70,11 +70,11 @@ export default function LoginScreen({ navigation }: any) {
           {/* Login Form */}
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Ionicons name="mail" size={20} color={Colors.accent} style={styles.inputIcon} />
+              <Ionicons name="mail" size={20} color={Colors.metallicGold} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Email"
-                placeholderTextColor={Colors.lightGray}
+                placeholderTextColor={Colors.textSecondary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -84,11 +84,11 @@ export default function LoginScreen({ navigation }: any) {
             </View>
 
             <View style={styles.inputContainer}>
-              <Ionicons name="lock-closed" size={20} color={Colors.accent} style={styles.inputIcon} />
+              <Ionicons name="lock-closed" size={20} color={Colors.metallicGold} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Senha"
-                placeholderTextColor={Colors.lightGray}
+                placeholderTextColor={Colors.textSecondary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -102,7 +102,7 @@ export default function LoginScreen({ navigation }: any) {
                 <Ionicons
                   name={showPassword ? "eye-off" : "eye"}
                   size={20}
-                  color={Colors.accent}
+                  color={Colors.metallicGold}
                 />
               </TouchableOpacity>
             </View>
@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   mainTitle: {
     fontSize: 28,
     fontWeight: '900',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     textAlign: 'center',
     letterSpacing: 2,
     marginBottom: 5,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   yearText: {
     fontSize: 36,
     fontWeight: '900',
-    color: Colors.accent,
+    color: Colors.metallicGold,
     textAlign: 'center',
     letterSpacing: 1,
     marginBottom: 5,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     textAlign: 'center',
     letterSpacing: 3,
     opacity: 0.9,
@@ -208,14 +208,14 @@ const styles = StyleSheet.create({
   decorativeLine: {
     width: 50,
     height: 2,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     opacity: 0.8,
   },
   decorativeCircle: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     marginHorizontal: 12,
   },
   formContainer: {
@@ -225,11 +225,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.backgroundSecondary,
     borderRadius: 12,
     marginBottom: 15,
     paddingHorizontal: 15,
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -242,19 +242,19 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
-    color: Colors.primary,
+    color: Colors.text,
     fontWeight: '500',
   },
   eyeIcon: {
     padding: 5,
   },
   loginButton: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     borderRadius: 12,
     paddingVertical: 15,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   loginButtonText: {
-    color: Colors.primary,
+    color: Colors.text,
     fontSize: 18,
     fontWeight: '900',
     letterSpacing: 1,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     textAlign: 'center',
     opacity: 0.8,
     fontWeight: '500',
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     marginHorizontal: 4,
     opacity: 0.7,
   },

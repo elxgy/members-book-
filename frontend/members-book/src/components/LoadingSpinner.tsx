@@ -12,7 +12,7 @@ interface LoadingSpinnerProps {
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'large',
-  color = Colors.primary,
+  color = Colors.text,
   message,
   overlay = false,
   style,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   message: {
     marginTop: 12,
     fontSize: 16,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     textAlign: 'center',
   },
 });

@@ -1,49 +1,40 @@
 export const Colors = {
-  // Primary color scheme - Royal Blue, Dark Blue, Yellow
-  primary: "#002366", // Royal Blue
-  secondary: "#000080", // Dark Blue
-  accent: "#FFD700", // Yellow/Gold
+  // Primary colors - Updated to match PDF
+  primary: '#002366',      // Dark blue from PDF
+  secondary: '#000080',    // Medium blue from PDF
+  accent: '#FFD700',       // Metallic gold from PDF
   
   // Base colors
-  white: "#ffffff",
-  black: "#000000",
-  lightGray: "#f7f7f7",
-  darkGray: "#8e8e93",
-  border: "#e0e0e0",
-  gold: "#FFD700",
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: '#6B7280',
+  lightGray: '#F8FAFC',
+  darkGray: '#1E293B',
   
-  // Background variations
-  background: {
-    primary: "#ffffff",
-    secondary: "#f8f9fa",
-    dark: "#002366",
-  },
+  // Background colors
+  background: '#F8FAFC',
+  surface: '#FFFFFF',
+  card: '#FFFFFF',
+  
+  // Gradient colors
+  gradientStart: '#002366',
+  gradientMiddle: '#003d82',
+  gradientEnd: '#000080',
   
   // Text colors
-  text: {
-    primary: "#000000",
-    secondary: "#666666",
-    tertiary: "#999999",
-    light: "#ffffff",
-    accent: "#002366",
-  },
+  text: '#1E293B',
+  textSecondary: '#475569',
+  textLight: '#64748B',
+  textOnPrimary: '#FFFFFF',
+  textOnAccent: '#1E293B',
 
   // Error color
   error: "#dc3545",
 
   // Member hierarchy colors
-  socios: {
-    background: "#002366",
-    text: "#ffffff",
-  },
-  infinity: {
-    background: "#000080",
-    text: "#ffffff",
-  },
-  disruption: {
-    background: "#FFD700",
-    text: "#000000",
-  },
+  socios: '#10B981',       // Green for Sócios
+  infinity: '#8B5CF6',     // Purple for Infinity
+  disruption: '#FFD700',   // Gold for Disruption (updated)
   
   // Hierarchy colors for member tiers
   hierarchy: {
@@ -65,11 +56,18 @@ export const Colors = {
   },
   
   // Interactive states
-  interactive: {
-    pressed: "#001a4d",
-    disabled: "#cccccc",
-    success: "#28a745",
-    warning: "#ffc107",
-    error: "#dc3545",
-  },
-}
+  hover: '#F1F5F9',
+  pressed: '#E2E8F0',
+  disabled: '#CBD5E1',
+  focus: '#002366',
+  
+  // Metallic effects
+  metallicGold: '#FFD700',
+  metallicGoldLight: '#FFED4E',
+  metallicGoldDark: '#B8860B',
+  
+  // Transparency variants
+  primaryTransparent: '#00236620',
+  accentTransparent: '#FFD70020',
+  whiteTransparent: '#FFFFFF20',
+};

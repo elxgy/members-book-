@@ -136,7 +136,7 @@ export default function MemberListScreen({ route, navigation }: any) {
     <View style={styles.container}>
       <StatusBar style="light" />
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
         style={styles.gradient}
       >
         <View style={styles.content}>
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   mainTitle: {
     fontSize: 28,
     fontWeight: '900',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     textAlign: 'center',
     letterSpacing: 2,
     marginBottom: 5,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.accent,
+    color: Colors.metallicGold,
     textAlign: 'center',
     letterSpacing: 1,
   },
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   decorativeLine: {
     width: 50,
     height: 2,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.metallicGold,
     opacity: 0.8,
   },
   decorativeCircle: {
@@ -309,11 +309,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   memberCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   relevanceText: {
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     fontSize: 12,
     fontWeight: '700',
     marginLeft: 5,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: Colors.accent,
+    borderColor: Colors.metallicGold,
   },
   memberInfo: {
     alignItems: 'center',
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 20,
     fontWeight: '700',
-    color: Colors.primary,
+    color: Colors.text,
     marginBottom: 5,
     textAlign: 'center',
   },
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   },
   memberDescription: {
     fontSize: 14,
-    color: Colors.darkGray,
+    color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 15,
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   contactButton: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.backgroundSecondary,
     width: 40,
     height: 40,
     borderRadius: 20,

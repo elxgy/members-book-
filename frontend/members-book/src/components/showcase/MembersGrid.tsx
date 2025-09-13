@@ -132,13 +132,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 8,
     textAlign: 'center',
   },
   emptyText: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
     marginTop: 8,

@@ -127,7 +127,7 @@ const AdminScreen: React.FC = () => {
       title: 'Relatórios',
       description: 'Visualizar métricas e relatórios',
       icon: 'bar-chart-outline',
-      color: Colors.accent,
+      color: Colors.metallicGold,
       onPress: () => Alert.alert('Em breve', 'Funcionalidade de relatórios em desenvolvimento.'),
     },
     {
@@ -287,11 +287,11 @@ const AdminScreen: React.FC = () => {
           {/* Search and Filter */}
           <View style={styles.searchContainer}>
             <View style={styles.searchInputContainer}>
-              <Ionicons name="search" size={20} color={Colors.text.secondary} />
+              <Ionicons name="search" size={20} color={Colors.textSecondary} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="Buscar usuários..."
-                placeholderTextColor={Colors.text.secondary}
+                placeholderTextColor={Colors.textSecondary}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
@@ -343,7 +343,7 @@ const AdminScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
   header: {
     paddingTop: 60,
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     marginBottom: 4,
   },
   headerSubtitle: {
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginHorizontal: 20,
     marginBottom: 16,
   },
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    shadowColor: Colors.text.primary,
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: Colors.text.primary,
+    color: Colors.text,
     marginLeft: 8,
   },
   filterContainer: {
@@ -413,9 +413,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.backgroundSecondary,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: Colors.backgroundSecondary,
   },
   filterButtonActive: {
     backgroundColor: Colors.primary,
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     fontWeight: '600',
   },
   filterButtonTextActive: {
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     marginHorizontal: 20,
     borderRadius: 12,
-    shadowColor: Colors.text.primary,
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
 
   userSeparator: {
     height: 1,
-    backgroundColor: Colors.border,
+    backgroundColor: Colors.backgroundSecondary,
     marginHorizontal: 16,
   },
 
@@ -455,13 +455,13 @@ const styles = StyleSheet.create({
   accessDeniedTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginTop: 20,
     marginBottom: 12,
   },
   accessDeniedText: {
     fontSize: 16,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 24,
   },

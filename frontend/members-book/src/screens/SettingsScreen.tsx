@@ -412,14 +412,14 @@ const SettingsScreen: React.FC = () => {
             <Switch
               value={item.value}
               onValueChange={item.onToggle}
-              trackColor={{ false: Colors.background.secondary, true: Colors.primary }}
-              thumbColor={item.value ? Colors.accent : Colors.text.secondary}
+              trackColor={{ false: Colors.backgroundSecondary, true: Colors.primary }}
+              thumbColor={item.value ? Colors.metallicGold : Colors.textSecondary}
             />
           ) : (
             <Ionicons 
               name="chevron-forward" 
               size={20} 
-              color={item.id === 'delete-account' ? '#DC3545' : Colors.text.secondary} 
+              color={item.id === 'delete-account' ? '#DC3545' : Colors.textSecondary} 
             />
           )}
         </View>
@@ -448,7 +448,7 @@ const SettingsScreen: React.FC = () => {
       
       {/* Header */}
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
         style={styles.header}
       >
         <Text style={styles.headerTitle}>Configurações</Text>
@@ -460,7 +460,7 @@ const SettingsScreen: React.FC = () => {
         <View style={styles.userCard}>
           <View style={styles.userAvatar}>
             <LinearGradient
-              colors={[Colors.primary, Colors.secondary]}
+              colors={[Colors.gradientStart, Colors.gradientEnd]}
               style={styles.avatarGradient}
             >
               <Text style={styles.avatarText}>
@@ -514,7 +514,7 @@ const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
   header: {
     paddingTop: 60,
@@ -523,13 +523,17 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.white,
+    fontWeight: '900',
+    color: Colors.textOnPrimary,
     marginBottom: 4,
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   headerSubtitle: {
     fontSize: 16,
-    color: Colors.accent,
+    color: Colors.metallicGold,
   },
   content: {
     flex: 1,
@@ -541,7 +545,7 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: Colors.text.primary,
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -560,7 +564,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
   },
   userInfo: {
     flex: 1,
@@ -568,12 +572,12 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginBottom: 4,
   },
   userType: {
@@ -587,7 +591,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginHorizontal: 20,
     marginBottom: 12,
   },
@@ -595,7 +599,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     marginHorizontal: 20,
     borderRadius: 12,
-    shadowColor: Colors.text.primary,
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -607,7 +611,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: Colors.backgroundSecondary,
   },
   dangerItem: {
     backgroundColor: '#FFF5F5',
@@ -616,7 +620,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.backgroundSecondary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -630,7 +634,7 @@ const styles = StyleSheet.create({
   settingTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 2,
   },
   dangerText: {
@@ -638,7 +642,7 @@ const styles = StyleSheet.create({
   },
   settingSubtitle: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
   },
   settingAction: {
     marginLeft: 12,
@@ -656,7 +660,7 @@ const styles = StyleSheet.create({
   logoutText: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.white,
+    color: Colors.textOnPrimary,
     marginLeft: 8,
   },
   footer: {
@@ -666,7 +670,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginBottom: 4,
   },
 });

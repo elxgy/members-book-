@@ -207,7 +207,7 @@ export default function MemberProfileScreen({ route, navigation }: any) {
 
           {isGuestUser && (
             <View style={styles.guestNotice}>
-              <Ionicons name="lock-closed" size={20} color={Colors.gold} />
+              <Ionicons name="lock-closed" size={20} color={Colors.metallicGold} />
               <Text style={styles.guestText}>Faça login como membro para interagir</Text>
             </View>
           )}
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   },
   guestText: {
     fontSize: 14,
-    color: Colors.gold,
+    color: Colors.metallicGold,
     marginLeft: 8,
     fontWeight: "500",
   },

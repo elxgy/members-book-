@@ -12,7 +12,7 @@ interface StatItemProps {
 
 const StatItem: React.FC<StatItemProps> = ({ icon, value, label }) => (
   <View style={styles.statItem}>
-    <Ionicons name={icon as any} size={24} color={Colors.primary} />
+    <Ionicons name={icon as any} size={24} color={Colors.text} />
     <Text style={styles.statValue}>{value}</Text>
     <Text style={styles.statLabel}>{label}</Text>
   </View>
@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.text.primary,
+    color: Colors.text,
     marginBottom: 15,
   },
   statsCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.backgroundSecondary,
     borderRadius: 15,
     padding: 20,
     flexDirection: 'row',
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.text.primary,
+    fontSize: 18,
+      fontWeight: 'bold',
+      color: Colors.text,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     marginTop: 4,
   },
 });

@@ -57,13 +57,13 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
         <Ionicons 
           name="search-outline" 
           size={20} 
-          color={Colors.text.secondary} 
+          color={Colors.textSecondary} 
           style={styles.searchIcon} 
         />
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar membros..."
-          placeholderTextColor={Colors.text.secondary}
+          placeholderTextColor={Colors.textSecondary}
           value={searchQuery}
           onChangeText={onSearchChange}
           returnKeyType="search"
@@ -77,7 +77,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             <Ionicons 
               name="close-circle" 
               size={20} 
-              color={Colors.text.secondary} 
+              color={Colors.textSecondary} 
             />
           </TouchableOpacity>
         )}
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.backgroundSecondary,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginHorizontal: 20,
     marginBottom: 16,
-    shadowColor: Colors.black,
+    shadowColor: Colors.shadow,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: Colors.text.primary,
+    color: Colors.text,
     paddingVertical: 0,
   },
   clearButton: {
@@ -141,22 +141,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.backgroundSecondary,
     marginRight: 12,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: Colors.backgroundSecondary,
   },
   filterButtonActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.metallicGold,
+    borderColor: Colors.metallicGold,
   },
   filterButtonText: {
     fontSize: 14,
     fontWeight: '500',
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
   },
   filterButtonTextActive: {
-    color: Colors.white,
+    color: Colors.textOnPrimary,
   },
 });
 

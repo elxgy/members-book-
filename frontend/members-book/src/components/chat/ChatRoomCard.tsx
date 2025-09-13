@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: Colors.interactive.success,
+    backgroundColor: Colors.metallicGold,
     borderWidth: 2,
-    borderColor: Colors.background.primary,
+    borderColor: Colors.background,
   },
   content: {
     flex: 1,
@@ -164,13 +164,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.text.primary,
+    color: Colors.text,
     flex: 1,
     marginRight: 8,
   },
   time: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: Colors.textSecondary,
     fontWeight: '500',
   },
   messageRow: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   participantsCount: {
     fontSize: 12,
-    color: Colors.text.tertiary,
+    color: Colors.textSecondary,
     marginTop: 2,
   },
 });
