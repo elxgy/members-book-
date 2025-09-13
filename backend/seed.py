@@ -1,6 +1,7 @@
+import bcrypt
 from backend.app.utils.database import members_collection
 from backend.app.models.member import Member
-import bcrypt
+from datetime import datetime
 
 def seed_users():
     print("Seeding users...")
@@ -29,20 +30,32 @@ def seed_users():
     ]
 
     for user_data in users_to_seed:
-        if not members_collection.find_one({"email": user_data["email"]}):
-            hashed_password = bcrypt.hashpw(user_data['password'].encode('utf-8'), bcrypt.gensalt())
-            new_user = Member(
-                name=user_data['name'],
-                email=user_data['email'],
-                password_hash=hashed_password.decode('utf-8'),
-                tier=user_data['tier'],
-                contact_info={},
-                user_type=user_data['user_type'],
-            )
-            members_collection.insert_one(new_user.dict(by_alias=True, exclude_none=True))
-            print(f"User {user_data['email']} seeded.")
+        existing_user = members_collection.find_one({"email": user_data["email"]})
+        
+        hashed_password = bcrypt.hashpw(user_data['password'].encode('utf-8'), bcrypt.gensalt())
+        
+        new_user_doc = {
+            "name": user_data['name'],
+            "email": user_data['email'],
+            "password_hash": hashed_password.decode('utf-8'),
+            "tier": user_data['tier'],
+            "contact_info": {}, # Keep empty for now
+            "profile_image_url": None,
+            "user_type": user_data['user_type'],
+            "updated_at": datetime.utcnow(),
+            "last_login": None,
+            "is_active": True
+        }
+
+        if existing_user:
+            # Preserve original creation date if updating
+            new_user_doc["created_at"] = existing_user.get("created_at", datetime.utcnow())
+            members_collection.replace_one({"_id": existing_user["_id"]}, new_user_doc)
+            print(f"User {user_data['email']} updated.")
         else:
-            print(f"User {user_data['email']} already exists.")
+            new_user_doc["created_at"] = datetime.utcnow() # Set creation date for new user
+            members_collection.insert_one(new_user_doc)
+            print(f"User {user_data['email']} seeded.")
 
 if __name__ == '__main__':
     seed_users()
