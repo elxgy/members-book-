@@ -7,7 +7,7 @@ members_bp = Blueprint('members_bp', __name__)
 
 @members_bp.route('/', methods=['GET'])
 @token_required
-@permission_required(Role.MEMBER)
+@permission_required(Role.GUEST)
 def get_members(current_user):
     members = member_service.get_all_members()
     return jsonify(members)

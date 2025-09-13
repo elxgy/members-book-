@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Optional, List
+from typing import Optional, List, Any
 from datetime import datetime
+from backend.app.models.deal import Deal
 
 class MemberInfo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
@@ -26,6 +27,8 @@ class MemberInfo(BaseModel):
     valor_total_por_indicacao: Optional[float] = None
     indicacoes_fornecidas: Optional[int] = None
     valor_total_acumulado: Optional[float] = None
+
+    deals: Optional[List[Deal]] = None
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
