@@ -10,7 +10,8 @@ class Member(BaseModel):
     tier: str # 'Disruption', 'Infinity', 'Sócio'
     contact_info: dict
     profile_image_url: Optional[str] = None
-    user_type: str # 'member', 'admin'
+    description: Optional[str] = None
+    user_type: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     last_login: Optional[datetime] = None
