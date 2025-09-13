@@ -9,7 +9,7 @@ def create_form(data):
         fields=data['fields'],
         created_by=data['created_by']
     )
-    result = forms_collection.insert_one(new_form.dict(by_alias=True))
+    result = forms_collection.insert_one(new_form.dict(by_alias=True, exclude_none=True))
     return {"message": "Form created successfully", "form_id": str(result.inserted_id)}
 
 def get_all_forms():

@@ -22,7 +22,7 @@ def register_user(data):
         user_type='member',
     )
 
-    result = members_collection.insert_one(new_user.dict(by_alias=True))
+    result = members_collection.insert_one(new_user.dict(by_alias=True, exclude_none=True))
     return {"message": "User registered successfully", "user_id": str(result.inserted_id)}, 201
 
 def login_user(data):

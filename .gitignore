@@ -139,3 +139,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .trae/
 .expo/
+*__pycache__/

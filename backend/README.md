@@ -27,6 +27,7 @@ This is the backend service for the Members Book application, built with Python 
 ### AI Integration
 - **Simple API**: Basic endpoints for AI features
 - **HTTP Client**: requests library for external AI calls
+- **Bio Generation**: OpenAI API for generating professional member bios
 
 ### Real-time Communication
 - **WebSockets**: Flask-SocketIO for real-time messaging
@@ -117,6 +118,18 @@ This is the backend service for the Members Book application, built with Python 
 - `GET /api/admin/members` - Member management
 - `PUT /api/admin/members/{id}/tier` - Update member tier
 
+## Forms and Bio Generation
+The application includes a feature that allows administrators to create dynamic forms for members. These forms are used to collect specific information from members, which is then used to generate a professional and standardized bio using the OpenAI API.
+
+**How it works:**
+1.  An admin creates a form, selecting the fields they want the member to fill out (e.g., "Main Achievements", "Areas of Expertise", "Personal Mission").
+2.  The member fills out the form with their information.
+3.  The submitted information is sent to a service that constructs a prompt for the OpenAI API.
+4.  The OpenAI API generates a professional bio based on the provided information.
+5.  The generated bio is then saved to the member's profile.
+
+This ensures that all member bios maintain a high standard of quality and consistency, reflecting the professionalism of the community.
+
 ## Installation & Setup
 
 ### Prerequisites
@@ -155,6 +168,19 @@ cp .env.example .env
 # Flask
 python app/main.py
 # Server will run on http://localhost:5000
+
+### Test Credentials
+You can use the following credentials to test the application with different user roles:
+
+-   **Admin:**
+    -   **Email:** `admin@test.com`
+    -   **Password:** `password`
+-   **Member:**
+    -   **Email:** `member@test.com`
+    -   **Password:** `password`
+-   **Guest:**
+    -   **Email:** `guest@test.com`
+    -   **Password:** `password`
 ```
 
 ## Security Features

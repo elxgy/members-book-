@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from backend.config import Config
 
 client = MongoClient(Config.MONGO_URI)
-db = client.get_database()
+db = client.get_database("Cluster0-Members-book")
 
 members_collection = db.get_collection("members")
 messages_collection = db.get_collection("messages")

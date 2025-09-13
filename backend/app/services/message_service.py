@@ -9,7 +9,7 @@ def send_message(data):
         content=data['content'],
         status='sent'
     )
-    result = messages_collection.insert_one(new_message.dict(by_alias=True))
+    result = messages_collection.insert_one(new_message.dict(by_alias=True, exclude_none=True))
     return {"message": "Message sent successfully", "message_id": str(result.inserted_id)}
 
 def get_conversation(user1_id, user2_id):

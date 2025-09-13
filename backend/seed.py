@@ -39,7 +39,7 @@ def seed_users():
                 contact_info={},
                 user_type=user_data['user_type'],
             )
-            members_collection.insert_one(new_user.dict(by_alias=True))
+            members_collection.insert_one(new_user.dict(by_alias=True, exclude_none=True))
             print(f"User {user_data['email']} seeded.")
         else:
             print(f"User {user_data['email']} already exists.")
