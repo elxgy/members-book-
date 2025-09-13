@@ -1,0 +1,51 @@
+import type { Member } from "../types"
+
+export const members: Member[] = [
+  {
+    id: "1",
+    name: "Wander Miranda",
+    company: "Enjoy Educação",
+    sector: "EDUCAÇÃO",
+    hierarchy: "socios",
+    bio: "Wander Miranda é fundador e CEO da Enjoy Educação, escola de negócios para empresários que está transformando o cenário empresarial capixaba. É autor do livro Máquina de Resultados e idealizador da maior evento de performance empresarial do ES.",
+    email: "wander@enjoy.com.br",
+    linkedin: "wandermiranda",
+    instagram: "wandermiranda",
+  },
+  {
+    id: "2",
+    name: "Ana Silva",
+    company: "Silva Advocacia",
+    sector: "ADVOCACIA",
+    hierarchy: "infinity",
+    bio: "Especialista em direito empresarial com mais de 15 anos de experiência.",
+    email: "ana@silvaadvocacia.com.br",
+  },
+  {
+    id: "3",
+    name: "Carlos Santos",
+    company: "Santos Arquitetura",
+    sector: "ARQUITETURA",
+    hierarchy: "disruption",
+    bio: "Arquiteto focado em projetos sustentáveis e inovadores.",
+    email: "carlos@santosarq.com.br",
+  },
+  {
+    id: "4",
+    name: "Maria Oliveira",
+    company: "Oliveira Consultoria",
+    sector: "CONSULTORIA",
+    hierarchy: "socios",
+    bio: "Consultora empresarial especializada em transformação digital.",
+    email: "maria@oliveiraconsult.com.br",
+  },
+  {
+    id: "5",
+    name: "João Costa",
+    company: "Costa Imóveis",
+    sector: "IMOBILIÁRIO",
+    hierarchy: "infinity",
+    bio: "Corretor de imóveis com foco em empreendimentos comerciais.",
+    email: "joao@costaimoveis.com.br",
+  },
+]
