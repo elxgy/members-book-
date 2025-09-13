@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Screens
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
-import ShowcaseScreen from '../screens/ShowcaseScreen';
+import ActionAreasScreen from '../screens/ActionAreasScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -26,16 +26,15 @@ const { width } = Dimensions.get('window');
 
 // Custom Top Tab Navigator with transparent design
 function CustomTopTabNavigator() {
-  const [activeTab, setActiveTab] = useState('Home');
+  const [activeTab, setActiveTab] = useState('ActionAreas');
 
   const tabs = [
-    { key: 'Home', title: 'Início', icon: 'home', component: HomeScreen },
-    { key: 'Showcase', title: 'Membros', icon: 'people', component: ShowcaseScreen },
+    { key: 'ActionAreas', title: 'Membros', icon: 'people', component: ActionAreasScreen },
     { key: 'Chat', title: 'Chat', icon: 'chatbubbles', component: ChatScreen },
     { key: 'Profile', title: 'Perfil', icon: 'person', component: ProfileScreen },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.key === activeTab)?.component || HomeScreen;
+  const ActiveComponent = tabs.find(tab => tab.key === activeTab)?.component || ActionAreasScreen;
 
   return (
     <View style={styles.container}>

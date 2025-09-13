@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking, Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../types';
 import { Colors } from '../constants/Colors';
+import MemberCard from '../components/MemberCard';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,117 +23,97 @@ interface Member {
   linkedin?: string;
   instagram?: string;
   relevanceLevel: RelevanceLevel;
-  segmentId: number;
+  sectorId: number;
+  sector: string;
 }
 
-// Dados de exemplo dos membros (baseado nas páginas 8-12 do PDF)
+// Dados de exemplo dos membros organizados por setores
 const membersData: Member[] = [
+  // ADVOCACIA (sectorId: 1)
   {
     id: 1,
-    name: 'Carlos Silva',
-    company: 'TechCorp Solutions',
-    description: 'CEO e fundador da TechCorp, especialista em transformação digital e inovação tecnológica.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20businessman%20headshot%20portrait%20in%20suit%20smiling%20confident%20corporate%20executive&image_size=square',
-    email: 'carlos@techcorp.com',
-    linkedin: 'carlos-silva-tech',
+    name: 'Dr. Carlos Silva',
+    company: 'Silva & Associados',
+    description: 'Advogado especialista em direito empresarial e tributário, com mais de 20 anos de experiência.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20lawyer%20businessman%20headshot%20portrait%20in%20suit%20confident%20legal%20executive&image_size=square',
+    email: 'carlos@silvaassociados.com',
+    linkedin: 'carlos-silva-advogado',
     relevanceLevel: 'Socios',
-    segmentId: 1
+    sectorId: 1,
+    sector: 'ADVOCACIA'
   },
   {
     id: 2,
-    name: 'Ana Costa',
-    company: 'InnovaTech',
-    description: 'CTO com mais de 15 anos de experiência em desenvolvimento de software e liderança de equipes.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20businesswoman%20headshot%20portrait%20in%20blazer%20smiling%20confident%20female%20executive&image_size=square',
-    email: 'ana@innovatech.com',
-    instagram: '@ana_costa_tech',
+    name: 'Dra. Ana Costa',
+    company: 'Costa Advocacia',
+    description: 'Advogada criminalista e especialista em direitos humanos, reconhecida nacionalmente.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20lawyer%20headshot%20portrait%20in%20blazer%20confident%20legal%20professional&image_size=square',
+    email: 'ana@costaadvocacia.com',
+    linkedin: 'ana-costa-advogada',
     relevanceLevel: 'Infinity',
-    segmentId: 1
+    sectorId: 1,
+    sector: 'ADVOCACIA'
   },
+  // FOOD (sectorId: 2)
   {
     id: 3,
-    name: 'Pedro Santos',
-    company: 'StartupLab',
-    description: 'Jovem empreendedor focado em soluções de IA e machine learning para pequenas empresas.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=young%20professional%20businessman%20headshot%20portrait%20casual%20shirt%20smiling%20startup%20entrepreneur&image_size=square',
-    linkedin: 'pedro-santos-ai',
-    instagram: '@pedro_startuplab',
-    relevanceLevel: 'Disruption',
-    segmentId: 1
+    name: 'Chef Pedro Santos',
+    company: 'Restaurante Sabores',
+    description: 'Chef executivo e proprietário, especialista em culinária contemporânea brasileira.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20chef%20headshot%20portrait%20white%20uniform%20smiling%20culinary%20expert&image_size=square',
+    email: 'pedro@restaurantesabores.com',
+    instagram: '@chef_pedro_santos',
+    relevanceLevel: 'Socios',
+    sectorId: 2,
+    sector: 'FOOD'
   },
   {
     id: 4,
-    name: 'Dr. Maria Oliveira',
-    company: 'Clínica Vida',
-    description: 'Médica cardiologista e diretora da Clínica Vida, referência em cardiologia preventiva.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20doctor%20headshot%20portrait%20white%20coat%20stethoscope%20medical%20professional&image_size=square',
-    email: 'dra.maria@clinicavida.com',
-    linkedin: 'maria-oliveira-cardio',
-    relevanceLevel: 'Socios',
-    segmentId: 2
+    name: 'Maria Oliveira',
+    company: 'Doces & Cia',
+    description: 'Confeiteira e empresária, especializada em doces artesanais e bolos personalizados.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20baker%20woman%20headshot%20portrait%20apron%20smiling%20pastry%20chef&image_size=square',
+    email: 'maria@docesecia.com',
+    instagram: '@doces_e_cia',
+    relevanceLevel: 'Disruption',
+    sectorId: 2,
+    sector: 'FOOD'
   },
+  // TECNOLOGIA (sectorId: 20)
   {
     id: 5,
     name: 'João Ferreira',
-    company: 'EduTech Brasil',
-    description: 'Diretor de inovação educacional, especialista em tecnologias aplicadas ao ensino.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20educator%20businessman%20headshot%20portrait%20glasses%20friendly%20smile%20academic%20professional&image_size=square',
-    email: 'joao@edutech.com.br',
-    linkedin: 'joao-ferreira-edu',
+    company: 'TechInova',
+    description: 'CTO e co-fundador, especialista em desenvolvimento de software e inteligência artificial.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20tech%20executive%20headshot%20portrait%20casual%20shirt%20confident%20developer&image_size=square',
+    email: 'joao@techinova.com',
+    linkedin: 'joao-ferreira-tech',
     relevanceLevel: 'Infinity',
-    segmentId: 3
+    sectorId: 20,
+    sector: 'TECNOLOGIA'
+  },
+  // ARQUITETURA (sectorId: 3)
+  {
+    id: 6,
+    name: 'Arq. Lucia Mendes',
+    company: 'Mendes Arquitetura',
+    description: 'Arquiteta especializada em projetos residenciais de alto padrão e sustentabilidade.',
+    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20architect%20headshot%20portrait%20blazer%20confident%20design%20professional&image_size=square',
+    email: 'lucia@mendesarquitetura.com',
+    linkedin: 'lucia-mendes-arquiteta',
+    relevanceLevel: 'Socios',
+    sectorId: 3,
+    sector: 'ARQUITETURA'
   }
 ];
 
-const getRelevanceBadgeColor = (level: RelevanceLevel) => {
-  switch (level) {
-    case 'Socios':
-      return '#FFD700'; // Dourado
-    case 'Infinity':
-      return '#C0C0C0'; // Prata
-    case 'Disruption':
-      return '#CD7F32'; // Bronze
-    default:
-      return Colors.accent;
-  }
-};
 
-const getRelevanceIcon = (level: RelevanceLevel) => {
-  switch (level) {
-    case 'Socios':
-      return 'star';
-    case 'Infinity':
-      return 'infinite';
-    case 'Disruption':
-      return 'flash';
-    default:
-      return 'person';
-  }
-};
 
 export default function MemberListScreen({ route, navigation }: any) {
-  const { segmentId, segmentName } = route.params;
+  const { sectorId, sectorName } = route.params;
   
-  // Filtrar membros por segmento
-  const segmentMembers = membersData.filter(member => member.segmentId === segmentId);
-
-  const handleContactPress = (type: 'email' | 'linkedin' | 'instagram', value: string) => {
-    let url = '';
-    
-    switch (type) {
-      case 'email':
-        url = `mailto:${value}`;
-        break;
-      case 'linkedin':
-        url = `https://linkedin.com/in/${value}`;
-        break;
-      case 'instagram':
-        url = `https://instagram.com/${value}`;
-        break;
-    }
-    
-    Linking.openURL(url);
-  };
+  // Filtrar membros por setor
+  const sectorMembers = membersData.filter(member => member.sectorId === sectorId);
 
   return (
     <View style={styles.container}>
@@ -151,7 +134,7 @@ export default function MemberListScreen({ route, navigation }: any) {
             
             <View style={styles.titleContainer}>
               <Text style={styles.mainTitle}>MEMBROS</Text>
-              <Text style={styles.subtitle}>{segmentName.toUpperCase()}</Text>
+              <Text style={styles.subtitle}>{sectorName.toUpperCase()}</Text>
             </View>
           </View>
 
@@ -163,67 +146,14 @@ export default function MemberListScreen({ route, navigation }: any) {
           </View>
 
           {/* Members List */}
-          <ScrollView 
-            style={styles.membersList}
+
+          <FlatList
+            data={sectorMembers}
+            renderItem={({ item }) => <MemberCard member={item} />}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.membersContainer}
-          >
-            {segmentMembers.map((member) => (
-              <View key={member.id} style={styles.memberCard}>
-                {/* Relevance Badge */}
-                <View style={[styles.relevanceBadge, { backgroundColor: getRelevanceBadgeColor(member.relevanceLevel) }]}>
-                  <Ionicons 
-                    name={getRelevanceIcon(member.relevanceLevel) as any} 
-                    size={16} 
-                    color={Colors.white} 
-                  />
-                  <Text style={styles.relevanceText}>{member.relevanceLevel}</Text>
-                </View>
-
-                {/* Member Photo */}
-                <View style={styles.photoContainer}>
-                  <Image source={{ uri: member.photo }} style={styles.memberPhoto} />
-                </View>
-
-                {/* Member Info */}
-                <View style={styles.memberInfo}>
-                  <Text style={styles.memberName}>{member.name}</Text>
-                  <Text style={styles.memberCompany}>{member.company}</Text>
-                  <Text style={styles.memberDescription}>{member.description}</Text>
-                  
-                  {/* Contact Buttons */}
-                  <View style={styles.contactContainer}>
-                    {member.email && (
-                      <TouchableOpacity
-                        style={styles.contactButton}
-                        onPress={() => handleContactPress('email', member.email!)}
-                      >
-                        <Ionicons name="mail" size={18} color={Colors.primary} />
-                      </TouchableOpacity>
-                    )}
-                    
-                    {member.linkedin && (
-                      <TouchableOpacity
-                        style={styles.contactButton}
-                        onPress={() => handleContactPress('linkedin', member.linkedin!)}
-                      >
-                        <Ionicons name="logo-linkedin" size={18} color={Colors.primary} />
-                      </TouchableOpacity>
-                    )}
-                    
-                    {member.instagram && (
-                      <TouchableOpacity
-                        style={styles.contactButton}
-                        onPress={() => handleContactPress('instagram', member.instagram!)}
-                      >
-                        <Ionicons name="logo-instagram" size={18} color={Colors.primary} />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
+            contentContainerStyle={styles.listContainer}
+          />
 
           {/* Footer Section */}
           <View style={styles.footerSection}>
