@@ -11,5 +11,11 @@ def test():
     rv = pytest.main(["backend/tests"])
     exit(rv)
 
+@cli.command("seed")
+def seed():
+    """Seeds the database with initial data."""
+    from backend.seed import seed_users
+    seed_users()
+
 if __name__ == "__main__":
     cli()
