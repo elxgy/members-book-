@@ -48,4 +48,15 @@ export const members: Member[] = [
     bio: "Corretor de imóveis com foco em empreendimentos comerciais.",
     email: "joao@costaimoveis.com.br",
   },
+  {
+    id: "6",
+    name: "Isabela Monteiro",
+    company: "IM Fashion Studio",
+    sector: "MODA & DESIGN",
+    hierarchy: "infinity",
+    bio: "Estilista e empreendedora com formação internacional. O IM Fashion Studio é reconhecido por suas coleções sustentáveis e inovadoras, combinando tecnologia têxtil com design contemporâneo.",
+    email: "isabela@imfashion.com.br",
+    linkedin: "isabelamonteirofashion",
+    instagram: "isabelamonteiro.fashion",
+  },
 ]
