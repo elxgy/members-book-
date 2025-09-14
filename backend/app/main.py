@@ -8,9 +8,11 @@ from backend.app.routes.forms import forms_bp
 from backend.app.routes.deals import deals_bp
 from backend.app.routes.value_requests import value_requests_bp
 from backend.config import Config
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app) # Enable CORS for all routes
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')

@@ -19,19 +19,17 @@ export default function UserTypeGuard({
   fallbackMessage,
   showUpgrade = false,
 }: UserTypeGuardProps) {
-  const { user, isAdmin, isMember, isGuest } = useUser()
-  const isGuestUser = isGuest()
-  const isMemberUser = isMember()
+  const { user } = useUser()
 
-  const hasAccess = user && allowedTypes.includes(user.userType)
+  const hasAccess = user && allowedTypes.includes(user.role as UserType)
 
   if (hasAccess) {
     return <>{children}</>
   }
 
   const getDefaultMessage = () => {
-    if (isGuestUser) return "Faça login como membro para acessar esta funcionalidade"
-    if (isMemberUser && allowedTypes.includes("admin")) return "Apenas administradores podem acessar esta funcionalidade"
+    if (user?.role === "guest") return "Faça login como membro para acessar esta funcionalidade"
+    if (user?.role === "member" && allowedTypes.includes("admin")) return "Apenas administradores podem acessar esta funcionalidade"
     return "Você não tem permissão para acessar esta funcionalidade"
   }
 
@@ -39,7 +37,7 @@ export default function UserTypeGuard({
     <View style={styles.container}>
       <Ionicons name="lock-closed" size={48} color={Colors.gold} />
       <Text style={styles.message}>{fallbackMessage || getDefaultMessage()}</Text>
-      {showUpgrade && isGuestUser && (
+      {showUpgrade && user?.role === "guest" && (
         <TouchableOpacity style={styles.upgradeButton}>
           <Text style={styles.upgradeText}>Fazer Login</Text>
         </TouchableOpacity>

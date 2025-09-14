@@ -227,7 +227,7 @@ const AdminScreen: React.FC = () => {
   );
 
   // Check if user is admin
-  if (user?.userType !== 'admin') {
+  if (user?.role !== 'admin') {
     return (
       <View style={styles.container}>
         <StatusBar style="light" />

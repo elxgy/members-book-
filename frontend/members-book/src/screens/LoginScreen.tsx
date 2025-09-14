@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import authService from '../services/authService';
+import { useUser } from '../context/UserContext';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -28,6 +29,7 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { login } = useUser();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -38,109 +40,28 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
     setLoading(true);
     
     try {
-      // Autenticar com backend ou fallback para credenciais de teste
-      const response = await performLogin(email, password);
+      const response = await authService.login({ email, password });
       
-      if (response.success) {
-        const userRole = response.user.role;
-        
-        // Salvar dados do usuário no contexto
+      if (response.success && response.user) {
         const loginSuccess = await login(response.user);
         
         if (loginSuccess) {
-          Alert.alert('Sucesso', 'Login realizado com sucesso!');
-          
-          // Verificar se o usuário é administrador
-          if (userRole === 'ADMIN') {
-            // Navegar para a tela de administração
-            navigation.navigate('Admin');
+          // Navigate based on role
+          if (response.user.role === 'ADMIN') {
+            navigation.navigate('AdminScreen');
           } else {
-            // Navegar para a tela principal do membro
-            navigation.navigate('Main');
+            navigation.navigate('SegmentList');
           }
         } else {
-          Alert.alert('Erro', 'Falha ao salvar dados do usuário');
+          Alert.alert('Erro', 'Falha ao salvar a sessão do usuário.');
         }
       } else {
-        // Provide specific error messages based on the response
-        let errorMessage = 'Falha na autenticação';
-        
-        if (response.message) {
-          if (response.message.includes('conexão') || response.message.includes('internet')) {
-            errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-          } else if (response.message.includes('inválidos') || response.message.includes('credentials')) {
-            errorMessage = 'Email ou senha incorretos. Verifique suas credenciais.';
-          } else {
-            errorMessage = response.message;
-          }
-        }
-        
-        Alert.alert('Erro de Login', errorMessage);
+        Alert.alert('Erro de Login', response.message || 'Email ou senha incorretos.');
       }
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao realizar login. Tente novamente.');
+      Alert.alert('Erro', 'Ocorreu um erro inesperado. Verifique sua conexão e tente novamente.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Função para login com fallback para credenciais de teste
-  const performLogin = async (email: string, password: string) => {
-    try {
-      // First try backend authentication
-      const backendResult = await authService.login({ email, password });
-      
-      if (backendResult.success) {
-        return backendResult;
-      }
-      
-      // If backend fails, try hardcoded test credentials as fallback
-      if (email === 'admin@disruption.com' && password === 'admin123') {
-        return {
-          success: true,
-          user: {
-            id: '1',
-            email: email,
-            name: 'Administrador',
-            role: 'ADMIN'
-          }
-        };
-      } else if (email.includes('@') && password.length >= 6) {
-        return {
-          success: true,
-          user: {
-            id: '2',
-            email: email,
-            name: 'Usuário Comum',
-            role: 'MEMBER'
-          }
-        };
-      }
-      
-      return {
-        success: false,
-        message: backendResult.message || 'Email ou senha inválidos'
-      };
-    } catch (error) {
-      console.error('Login error:', error);
-      
-      // Fallback to hardcoded credentials if backend is unavailable
-      if (email === 'admin@disruption.com' && password === 'admin123') {
-        return {
-          success: true,
-          user: {
-            id: '1',
-            email: email,
-            name: 'Administrador (Offline)',
-            role: 'ADMIN'
-          }
-        };
-      }
-      
-      return {
-        success: false,
-        message: 'Erro de conexão. Verifique sua internet.'
-      };
     }
   };
 
