@@ -1,6 +1,5 @@
-from backend.app.utils.database import members_collection, members_info_collection
+from backend.app.utils.database import members_info_collection
 from backend.app.models.member_info import MemberInfo
-from bson import ObjectId
 from datetime import datetime
 from pydantic import ValidationError
 

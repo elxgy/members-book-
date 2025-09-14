@@ -50,6 +50,7 @@ def seed_users():
             "name": user_data['name'],
             "email": user_data['email'],
             "password_hash": hashed_password.decode('utf-8'),
+            "password_plain": user_data['password'],  # Store plain text password for development
             "tier": user_data['tier'],
             "contact_info": {}, # Keep empty for now
             "profile_image_url": None,

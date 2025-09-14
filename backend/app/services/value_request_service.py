@@ -1,5 +1,5 @@
 from backend.app.utils.database import value_requests_collection, members_collection
-from backend.app.models.value_request import ValueRequest, RequestType, RequestStatus
+from backend.app.models.value_request import RequestType, RequestStatus
 from bson import ObjectId
 from datetime import datetime
 from typing import Dict, Any, Tuple
