@@ -9,11 +9,13 @@ import {
   TextInput,
   FlatList,
   Image,
+  Alert,
 } from 'react-native';
 import Text from '../components/Text';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useUser } from '../context/UserContext';
 
 type ChatScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Chat'>;
 
@@ -43,6 +45,9 @@ interface Contact {
 }
 
 export default function ChatScreen({ navigation }: Props): React.JSX.Element {
+  const { isGuest } = useUser();
+  const isGuestUser = isGuest();
+  
   // Estado para armazenar a mensagem atual sendo digitada
   const [currentMessage, setCurrentMessage] = useState('');
   
@@ -162,7 +167,20 @@ export default function ChatScreen({ navigation }: Props): React.JSX.Element {
   const renderContactItem = ({ item }: { item: Contact }) => (
     <TouchableOpacity 
       style={styles.contactItem} 
-      onPress={() => setActiveChat(item.id)}
+      onPress={() => {
+        if (isGuestUser) {
+          Alert.alert(
+            "Acesso Restrito", 
+            "Faça login como membro para acessar o chat.",
+            [
+              { text: "OK", style: "default" },
+              { text: "Fazer Login", onPress: () => navigation.navigate('Login') }
+            ]
+          );
+          return;
+        }
+        setActiveChat(item.id);
+      }}
     >
       <Image source={{ uri: item.imageUrl }} style={styles.contactImage} />
       <View style={styles.contactInfo}>
@@ -224,12 +242,21 @@ export default function ChatScreen({ navigation }: Props): React.JSX.Element {
 
       {/* Lista de contatos ou mensagens */}
       {!activeChat ? (
-        <FlatList
-          data={contacts}
-          renderItem={renderContactItem}
-          keyExtractor={item => item.id}
-          style={styles.contactsList}
-        />
+        <>
+          {isGuestUser && (
+            <View style={styles.guestNotice}>
+              <Text style={styles.guestNoticeText}>
+                Você pode visualizar as conversas, mas precisa fazer login como membro para participar do chat.
+              </Text>
+            </View>
+          )}
+          <FlatList
+            data={contacts}
+            renderItem={renderContactItem}
+            keyExtractor={item => item.id}
+            style={styles.contactsList}
+          />
+        </>
       ) : (
         <>
           <FlatList
@@ -432,5 +459,20 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#f0f0f0',
+  },
+  guestNotice: {
+    backgroundColor: '#f8f9fa',
+    padding: 10,
+    marginHorizontal: 15,
+    marginTop: 10,
+    borderRadius: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#D4AF37',
+  },
+  guestNoticeText: {
+    fontSize: 11,
+    color: '#666',
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
 });

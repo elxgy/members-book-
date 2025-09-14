@@ -40,23 +40,64 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
     setLoading(true);
     
     try {
-      const response = await authService.login({ email, password });
+      // Check if it's guest login
+      if (email === 'guest@test.com') {
+        const response = await authService.guestLogin();
+        
+        if (response.success && response.user) {
+          const loginSuccess = await login(response.user);
+          
+          if (loginSuccess) {
+            navigation.navigate('SegmentList');
+          } else {
+            Alert.alert('Erro', 'Falha ao salvar a sessão do usuário.');
+          }
+        } else {
+          Alert.alert('Erro de Login', response.message || 'Falha no login como convidado.');
+        }
+      } else {
+        const response = await authService.login({ email, password });
+        
+        if (response.success && response.user) {
+          const loginSuccess = await login(response.user);
+          
+          if (loginSuccess) {
+            // Navigate based on role
+            if (response.user.role === 'ADMIN') {
+              navigation.navigate('AdminScreen');
+            } else {
+              navigation.navigate('SegmentList');
+            }
+          } else {
+            Alert.alert('Erro', 'Falha ao salvar a sessão do usuário.');
+          }
+        } else {
+          Alert.alert('Erro de Login', response.message || 'Email ou senha incorretos.');
+        }
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Ocorreu um erro inesperado. Verifique sua conexão e tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setLoading(true);
+    
+    try {
+      const response = await authService.guestLogin();
       
       if (response.success && response.user) {
         const loginSuccess = await login(response.user);
         
         if (loginSuccess) {
-          // Navigate based on role
-          if (response.user.role === 'ADMIN') {
-            navigation.navigate('AdminScreen');
-          } else {
-            navigation.navigate('SegmentList');
-          }
+          navigation.navigate('SegmentList');
         } else {
           Alert.alert('Erro', 'Falha ao salvar a sessão do usuário.');
         }
       } else {
-        Alert.alert('Erro de Login', response.message || 'Email ou senha incorretos.');
+        Alert.alert('Erro de Login', response.message || 'Falha no login como convidado.');
       }
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Verifique sua conexão e tente novamente.');
@@ -153,6 +194,14 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
                 <Text style={styles.loginButtonText} variant="button">
                   {loading ? 'ENTRANDO...' : 'ENTRAR'}
                 </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.guestButton, loading && styles.loginButtonDisabled]}
+                onPress={handleGuestLogin}
+                disabled={loading}
+              >
+                <Text style={styles.guestButtonText} variant="button">ENTRAR COMO CONVIDADO</Text>
               </TouchableOpacity>
             </View>
 
@@ -306,6 +355,21 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 12,
     color: '#666',
+    letterSpacing: 1,
+  },
+  guestButton: {
+    backgroundColor: 'transparent',
+    paddingVertical: 18,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 15,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+  },
+  guestButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#D4AF37',
     letterSpacing: 1,
   },
 });

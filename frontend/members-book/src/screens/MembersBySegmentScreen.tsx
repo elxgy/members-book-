@@ -7,12 +7,15 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Text from '../components/Text';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Member, membersBySegment } from '../types/Member';
+import { useUser } from '../context/UserContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type MembersBySegmentScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,12 +35,25 @@ interface Props {
 export default function MembersBySegmentScreen({ navigation, route }: Props): React.JSX.Element {
   const { segment } = route.params;
   const members = membersBySegment[segment] || [];
+  const { isGuest } = useUser();
+  const isGuestUser = isGuest();
 
   const handleBackPress = () => {
     navigation.goBack();
   };
 
   const handleMemberPress = (member: Member) => {
+    if (isGuestUser) {
+      Alert.alert(
+        "Acesso Restrito", 
+        "Faça login como membro para ver os detalhes completos do perfil.",
+        [
+          { text: "OK", style: "default" },
+          { text: "Fazer Login", onPress: () => navigation.navigate('Login') }
+        ]
+      );
+      return;
+    }
     navigation.navigate('MemberDetail', { memberId: member.id, segment });
   };
 
@@ -65,18 +81,27 @@ export default function MembersBySegmentScreen({ navigation, route }: Props): Re
       
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-          <Text style={styles.backButtonText} variant="h2">←</Text>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={handleBackPress}
+        >
+          <Icon name="arrow-left" size={20} color="#D4AF37" />
         </TouchableOpacity>
-        <View style={styles.titleContainer}>
-          <Text style={styles.mainTitle} variant="h1">MEMBROS POR SEGMENTO</Text>
-          <Text style={styles.subtitle} variant="body">Clique para acessar</Text>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle} variant="h2">MEMBROS POR SEGMENTO</Text>
+          <Text style={styles.headerSubtitle} variant="body">Clique para acessar</Text>
         </View>
+        <View style={styles.placeholder} />
       </View>
 
       {/* Segment Title */}
       <View style={styles.segmentTitleContainer}>
         <Text style={styles.segmentTitle} variant="h2">{segment}</Text>
+        {isGuestUser && (
+          <Text style={styles.guestNotice} variant="caption">
+            Como convidado, você pode visualizar os membros mas precisa fazer login para ver detalhes completos
+          </Text>
+        )}
       </View>
 
       {/* Members List */}
@@ -106,36 +131,38 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 30,
+    paddingTop: 20,
     paddingBottom: 20,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
   backButton: {
-    padding: 10,
-    marginRight: 10,
+    padding: 8,
   },
-  backButtonText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#D4AF37',
-  },
-  titleContainer: {
+  headerTitleContainer: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  mainTitle: {
-    fontSize: 18,
+  headerTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#D4AF37',
     textAlign: 'center',
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
+    marginBottom: 4,
   },
-  subtitle: {
+  headerSubtitle: {
     fontSize: 12,
-    color: '#D4AF37',
-    marginTop: 5,
+    color: '#666',
+    textAlign: 'center',
+  },
+  placeholder: {
+    width: 36,
   },
   segmentTitleContainer: {
     paddingHorizontal: 20,
@@ -213,5 +240,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#D4AF37',
     letterSpacing: 1,
+  },
+  guestNotice: {
+    fontSize: 11,
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: 5,
+    textAlign: 'center',
+    paddingHorizontal: 10,
   },
 });
