@@ -103,7 +103,7 @@ export default function UserProfileScreen({ navigation }: Props): React.JSX.Elem
             <View style={styles.profileActionsContainer}>
               <TouchableOpacity 
                 style={[styles.profileActionButton, { backgroundColor: hierarchyStyles.headerColor }]}
-                onPress={() => alert('Editar perfil')}
+                onPress={() => navigation.navigate('EditProfile' as never)}
               >
                 <Icon name="paint-brush" size={16} color="#FFFFFF" />
               </TouchableOpacity>
@@ -190,6 +190,8 @@ export default function UserProfileScreen({ navigation }: Props): React.JSX.Elem
                <Text style={[styles.statusText, { color: hierarchyStyles.textColor }]}>Valor Total Acumulado: R$ 700.000,00</Text>
              </View>
           </View>
+          
+
 
           {/* Logo da Hierarquia */}
           <View style={styles.hierarchyLogoContainer}>
@@ -237,6 +239,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
+
   profileContainer: {
     alignItems: 'center',
     paddingHorizontal: 20,
