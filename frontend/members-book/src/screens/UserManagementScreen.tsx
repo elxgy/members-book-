@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
@@ -9,12 +8,11 @@ import {
   TextInput,
   Alert,
   Modal,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-
-import { Colors } from '../constants/Colors';
+import Text from '../components/Text';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import type { AdminUser } from '../types';
 
 // Mock data para usuários
@@ -124,14 +122,21 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
   const renderUserItem = ({ item }: { item: AdminUser }) => (
     <View style={styles.userItem}>
       <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.name}</Text>
-        <Text style={styles.userEmail}>{item.email}</Text>
-        <View style={styles.userMeta}>
-          <View style={[styles.tierBadge, { backgroundColor: getTierColor(item.tier) }]}>
-            <Text style={styles.tierText}>{item.tier.toUpperCase()}</Text>
-          </View>
-          <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-            <Text style={styles.statusText}>{getStatusText(item.status)}</Text>
+        <View style={styles.userAvatar}>
+          <Text style={styles.userAvatarText} variant="body">
+            {item.name.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+        <View style={styles.userDetails}>
+          <Text style={styles.userName} variant="body">{item.name}</Text>
+          <Text style={styles.userEmail} variant="caption">{item.email}</Text>
+          <View style={styles.userMeta}>
+            <View style={[styles.tierBadge, { backgroundColor: getTierColor(item.tier) }]}>
+              <Text style={styles.tierText} variant="caption">{item.tier.toUpperCase()}</Text>
+            </View>
+            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
+              <Text style={styles.statusText} variant="caption">{getStatusText(item.status)}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -140,26 +145,26 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
         onPress={() => handleDeleteUser(item.id, item.name)}
         activeOpacity={0.7}
       >
-        <Ionicons name="trash-outline" size={20} color="#FF4444" />
-      </TouchableOpacity>
-    </View>
-  );
+        <Icon name="trash" size={18} color="#E74C3C" />
+       </TouchableOpacity>
+      </View>
+    );
 
   const getTierColor = (tier: string) => {
     switch (tier) {
-      case 'socios': return Colors.metallicGold;
-      case 'infinity': return Colors.primary;
-      case 'disruption': return Colors.secondary;
-      default: return Colors.textSecondary;
+      case 'socios': return '#D4AF37';
+      case 'infinity': return '#8A2BE2';
+      case 'disruption': return '#2E8B57';
+      default: return '#666666';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return '#28A745';
-      case 'pending': return '#FFC107';
-      case 'suspended': return '#DC3545';
-      default: return Colors.textSecondary;
+      case 'active': return '#4CAF50';
+      case 'pending': return '#FF9800';
+      case 'inactive': return '#f02416';
+      default: return '#666666';
     }
   };
 
@@ -182,33 +187,33 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Adicionar Novo Usuário</Text>
+            <Text style={styles.modalTitle} variant="h3">Adicionar Usuário</Text>
             <TouchableOpacity
               onPress={() => setShowAddModal(false)}
               style={styles.closeButton}
             >
-              <Ionicons name="close" size={24} color={Colors.textSecondary} />
+              <Icon name="times" size={20} color="#333" />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.formContainer}>
+          <View style={styles.modalBody}>
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Nome *</Text>
+              <Text style={styles.inputLabel} variant="body">Nome</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Digite o nome completo"
-                placeholderTextColor={Colors.textSecondary}
+                placeholder="Digite o nome do usuário"
+                placeholderTextColor="#666"
                 value={newUser.name}
                 onChangeText={(text) => setNewUser({ ...newUser, name: text })}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Email *</Text>
+              <Text style={styles.inputLabel} variant="body">Email</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Digite o email"
-                placeholderTextColor={Colors.textSecondary}
+                placeholder="Digite o email do usuário"
+                placeholderTextColor="#666"
                 value={newUser.email}
                 onChangeText={(text) => setNewUser({ ...newUser, email: text })}
                 keyboardType="email-address"
@@ -217,7 +222,7 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Tier</Text>
+              <Text style={styles.inputLabel} variant="body">Tier</Text>
               <View style={styles.tierSelector}>
                 {(['disruption', 'infinity', 'socios'] as const).map((tier) => (
                   <TouchableOpacity
@@ -240,18 +245,20 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
             </View>
           </View>
 
-          <View style={styles.modalActions}>
+          <View style={styles.modalFooter}>
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={() => setShowAddModal(false)}
+              activeOpacity={0.7}
             >
-              <Text style={styles.cancelButtonText}>Cancelar</Text>
+              <Text style={styles.cancelButtonText} variant="body">Cancelar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.addButton}
+              style={styles.confirmButton}
               onPress={handleAddUser}
+              activeOpacity={0.7}
             >
-              <Text style={styles.addButtonText}>Adicionar</Text>
+              <Text style={styles.confirmButtonText} variant="body">Adicionar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -260,181 +267,209 @@ const UserManagementScreen: React.FC<UserManagementScreenProps> = ({ navigation 
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
       {/* Header */}
-      <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Ionicons name="arrow-back" size={24} color={Colors.textOnPrimary} />
-          </TouchableOpacity>
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>Gerenciar Usuários</Text>
-            <Text style={styles.headerSubtitle}>Adicionar e remover usuários da plataforma</Text>
-          </View>
-        </View>
-      </LinearGradient>
-
-      <View style={styles.content}>
-        {/* Search and Add Button */}
-        <View style={styles.topSection}>
-          <View style={styles.searchContainer}>
-            <Ionicons name="search" size={20} color={Colors.textSecondary} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Buscar usuários..."
-              placeholderTextColor={Colors.textSecondary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          </View>
-          <TouchableOpacity
-            style={styles.addUserButton}
-            onPress={() => setShowAddModal(true)}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="add" size={20} color={Colors.white} />
-            <Text style={styles.addUserButtonText}>Adicionar</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Users List */}
-        <View style={styles.usersList}>
-          <Text style={styles.usersCount}>
-            {filteredUsers.length} usuário{filteredUsers.length !== 1 ? 's' : ''} encontrado{filteredUsers.length !== 1 ? 's' : ''}
-          </Text>
-          <FlatList
-            data={filteredUsers}
-            renderItem={renderUserItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            contentContainerStyle={styles.listContainer}
-          />
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-left" size={20} color="#D4AF37" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle} variant="h2">GERENCIAR USUÁRIOS</Text>
+        <View style={styles.placeholder} />
       </View>
 
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          <Text style={styles.sectionTitle} variant="h3">
+            Usuários da Plataforma
+          </Text>
+          <Text style={styles.sectionDescription} variant="body">
+            Gerencie os usuários cadastrados na plataforma. Adicione novos usuários ou remova usuários existentes.
+          </Text>
+
+          {/* Search and Add Button */}
+          <View style={styles.topSection}>
+            <View style={styles.searchContainer}>
+              <Icon name="search" size={16} color="#666" />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Buscar usuários..."
+                placeholderTextColor="#666"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.addUserButton}
+              onPress={() => setShowAddModal(true)}
+              activeOpacity={0.7}
+            >
+              <Icon name="plus" size={16} color="#FFFFFF" />
+              <Text style={styles.addUserButtonText}>Adicionar</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Users List */}
+          <View style={styles.usersContainer}>
+            <Text style={styles.usersCount}>
+              {filteredUsers.length} usuário{filteredUsers.length !== 1 ? 's' : ''} encontrado{filteredUsers.length !== 1 ? 's' : ''}
+            </Text>
+            {filteredUsers.map((item, index) => (
+              <View key={item.id}>
+                {renderUserItem({ item })}
+                {index < filteredUsers.length - 1 && <View style={styles.separator} />}
+              </View>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+
       {renderAddUserModal()}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-  },
-  headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
   backButton: {
-    marginRight: 16,
-    padding: 4,
-  },
-  headerTextContainer: {
-    flex: 1,
+    padding: 8,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.textOnPrimary,
-    marginBottom: 4,
+    color: '#D4AF37',
+    textAlign: 'center',
+    flex: 1,
   },
-  headerSubtitle: {
-    fontSize: 16,
-    color: Colors.accent,
+  placeholder: {
+    width: 40,
+  },
+  scrollView: {
+    flex: 1,
   },
   content: {
-    flex: 1,
     padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 8,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 24,
+    lineHeight: 20,
   },
   topSection: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: 24,
     gap: 12,
   },
   searchContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
-    color: Colors.text,
+    fontSize: 14,
+    color: '#333333',
     marginLeft: 8,
   },
   addUserButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.primary,
-    borderRadius: 12,
+    backgroundColor: '#D4AF37',
+    borderRadius: 8,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     gap: 8,
   },
   addUserButtonText: {
-    color: Colors.white,
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 14,
     fontWeight: '600',
   },
-  usersList: {
-    flex: 1,
+  usersContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    overflow: 'hidden',
   },
   usersCount: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    marginBottom: 12,
-  },
-  listContainer: {
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    fontSize: 12,
+    color: '#666666',
+    marginBottom: 16,
+    fontWeight: '500',
   },
   userItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#FFFFFF',
   },
   userInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D4AF37',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  userAvatarText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  userDetails: {
     flex: 1,
   },
   userName: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.text,
-    marginBottom: 4,
+    color: '#333333',
+    marginBottom: 2,
   },
   userEmail: {
     fontSize: 14,
-    color: Colors.textSecondary,
-    marginBottom: 8,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  userRole: {
+    fontSize: 12,
+    color: '#999999',
   },
   userMeta: {
     flexDirection: 'row',
@@ -448,7 +483,7 @@ const styles = StyleSheet.create({
   tierText: {
     fontSize: 10,
     fontWeight: '600',
-    color: Colors.white,
+    color: '#FFFFFF',
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -458,7 +493,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 10,
     fontWeight: '600',
-    color: Colors.white,
+    color: '#FFFFFF',
   },
   deleteButton: {
     padding: 8,
@@ -467,7 +502,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#E0E0E0',
     marginHorizontal: 16,
   },
   modalOverlay: {
@@ -477,8 +512,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: Colors.white,
-    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
     margin: 20,
     maxHeight: '80%',
     width: '90%',
@@ -489,37 +524,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.backgroundSecondary,
+    borderBottomColor: '#E0E0E0',
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.text,
+    color: '#333333',
   },
   closeButton: {
     padding: 4,
   },
-  formContainer: {
+  modalBody: {
     padding: 20,
   },
   inputGroup: {
     marginBottom: 20,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: Colors.text,
+    color: '#333333',
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: Colors.backgroundSecondary,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: Colors.text,
-    backgroundColor: Colors.white,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#333333',
+    backgroundColor: '#FFFFFF',
   },
   tierSelector: {
     flexDirection: 'row',
@@ -529,54 +564,54 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.backgroundSecondary,
+    borderColor: '#E0E0E0',
     alignItems: 'center',
   },
   tierOptionSelected: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: '#D4AF37',
+    borderColor: '#D4AF37',
   },
   tierOptionText: {
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   tierOptionTextSelected: {
-    color: Colors.white,
+    color: '#FFFFFF',
   },
-  modalActions: {
+  modalFooter: {
     flexDirection: 'row',
     padding: 20,
     gap: 12,
     borderTopWidth: 1,
-    borderTopColor: Colors.backgroundSecondary,
+    borderTopColor: '#E0E0E0',
   },
   cancelButton: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.textSecondary,
+    borderColor: '#666666',
     alignItems: 'center',
   },
   cancelButtonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: '#666666',
   },
-  addButton: {
+  confirmButton: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 12,
-    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    backgroundColor: '#D4AF37',
     alignItems: 'center',
   },
-  addButtonText: {
-    fontSize: 16,
+  confirmButtonText: {
+    fontSize: 14,
     fontWeight: '600',
-    color: Colors.white,
+    color: '#FFFFFF',
   },
 });
 
