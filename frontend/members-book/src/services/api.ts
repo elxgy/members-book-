@@ -1,9 +1,9 @@
 import type { Member, ChatRoom, ChatMessage, AdminUser, SystemMetric } from '../types';
-import { API_URL } from '../constants/Config';
+import { API_URL, API_TIMEOUT, TOKEN_STORAGE_KEY } from '../constants/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Base API configuration
 const API_BASE_URL = API_URL;
-const API_TIMEOUT = 10000;
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -13,16 +13,31 @@ class ApiError extends Error {
 }
 
 class ApiService {
+  private async getAuthHeaders(): Promise<Record<string, string>> {
+    const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (token) {
+      headers['x-access-token'] = token;
+    }
+    
+    return headers;
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
     try {
+      const authHeaders = await this.getAuthHeaders();
+      
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          ...authHeaders,
           ...options.headers,
         },
       });
@@ -30,7 +45,21 @@ class ApiService {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new ApiError(response.status, `HTTP ${response.status}: ${response.statusText}`);
+        if (response.status === 401) {
+          // Token expirado ou inválido
+          await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
+          throw new ApiError(response.status, 'Sessão expirada. Faça login novamente.');
+        }
+        
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // Ignore JSON parse errors
+        }
+        
+        throw new ApiError(response.status, errorMessage);
       }
 
       return await response.json();
@@ -39,7 +68,10 @@ class ApiService {
       if (error instanceof ApiError) {
         throw error;
       }
-      throw new Error(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Timeout: A requisição demorou muito para responder');
+      }
+      throw new Error(`Erro de rede: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   }
 

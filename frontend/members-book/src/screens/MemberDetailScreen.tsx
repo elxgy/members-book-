@@ -7,12 +7,14 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Text from '../components/Text';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { Member, membersBySegment } from '../types/Member';
+import { Member } from '../types/Member';
+import { useMembers } from '../hooks/useMembers';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type MemberDetailScreenRouteProp = RouteProp<RootStackParamList, 'MemberDetail'>;
@@ -25,17 +27,44 @@ interface Props {
 
 export default function MemberDetailScreen({ route, navigation }: Props): React.JSX.Element {
   const { memberId, segment } = route.params;
+  const { members, loading, error } = useMembers();
   
   // Encontrar o membro pelo ID e segmento
-  const member = membersBySegment[segment]?.find(m => m.id === memberId);
+  const member = members.find(m => m.id === memberId && m.segment === segment);
+  
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#D4AF37" />
+          <Text style={styles.loadingText}>Carregando membro...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+  
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
   
   if (!member) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Membro não encontrado</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>Voltar</Text>
-        </TouchableOpacity>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Membro não encontrado</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
   }
@@ -328,5 +357,21 @@ const styles = StyleSheet.create({
   hierarchyLogo: {
     width: 100,
     height: 50,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#666',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
 });

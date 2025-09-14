@@ -1,39 +1,39 @@
 import { StyleSheet } from 'react-native';
 
 /**
- * Estilos globais para aplicar a fonte Naville Regular em toda a aplicação
+ * Estilos globais para aplicar fontes do sistema em toda a aplicação
  */
 export const GlobalStyles = StyleSheet.create({
   // Estilo base para todos os textos
   text: {
-    fontFamily: 'Naville-Regular',
+    fontFamily: 'System',
   },
   
   // Estilo para cabeçalhos
   heading: {
-    fontFamily: 'Naville-Regular',
+    fontFamily: 'System',
     fontWeight: 'bold',
   },
   
   // Estilo para botões
   buttonText: {
-    fontFamily: 'Naville-Regular',
+    fontFamily: 'System',
     fontWeight: '600',
   },
   
   // Estilo para textos pequenos
   smallText: {
-    fontFamily: 'Naville-Regular',
+    fontFamily: 'System',
     fontSize: 12,
   },
 });
 
 /**
- * Função para aplicar a fonte Naville Regular a qualquer estilo
+ * Função para aplicar fonte do sistema a qualquer estilo
  * @param styles Estilos originais
- * @returns Estilos com a fonte Naville Regular aplicada
+ * @returns Estilos com a fonte do sistema aplicada
  */
-export const withNavilleFont = (styles: any) => {
+export const withSystemFont = (styles: any) => {
   const updatedStyles = { ...styles };
   
   // Percorre todas as propriedades do estilo
@@ -43,10 +43,10 @@ export const withNavilleFont = (styles: any) => {
         (updatedStyles[key].fontSize !== undefined || 
          updatedStyles[key].color !== undefined || 
          updatedStyles[key].fontWeight !== undefined)) {
-      // Aplica a fonte Naville Regular
+      // Aplica a fonte do sistema
       updatedStyles[key] = {
         ...updatedStyles[key],
-        fontFamily: 'Naville-Regular',
+        fontFamily: 'System',
       };
     }
   });

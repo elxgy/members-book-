@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL, MOCK_MODE } from '../constants/Config';
+import { API_URL, MOCK_MODE, TOKEN_STORAGE_KEY } from '../constants/Config';
 
 const API_BASE_URL = API_URL;
 
@@ -28,7 +28,7 @@ class AuthService {
       'Content-Type': 'application/json',
     };
 
-    const token = await AsyncStorage.getItem('access_token');
+    const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
     if (token) {
       defaultHeaders['x-access-token'] = token;
     }
@@ -91,7 +91,7 @@ class AuthService {
           break;
       }
 
-      await AsyncStorage.setItem('access_token', 'mock_token');
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, 'mock_token');
       return {
         success: true,
         user: mockUser,
@@ -104,7 +104,7 @@ class AuthService {
       });
 
       // Store the JWT token
-      await AsyncStorage.setItem('access_token', response.access_token);
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
       
       // Create user object from response
       const user: User = {
@@ -138,7 +138,7 @@ class AuthService {
         role: 'GUEST',
       };
 
-      await AsyncStorage.setItem('access_token', 'mock_guest_token');
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, 'mock_guest_token');
       return {
         success: true,
         user: mockUser,
@@ -151,7 +151,7 @@ class AuthService {
       });
 
       // Store the JWT token
-      await AsyncStorage.setItem('access_token', response.access_token);
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
       
       // Create guest user object
       const user: User = {
@@ -185,12 +185,12 @@ class AuthService {
       // Continue with local logout even if API call fails
     } finally {
       // Always clear local storage
-      await AsyncStorage.removeItem('access_token');
+      await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
     }
   }
 
   async getStoredToken(): Promise<string | null> {
-    return await AsyncStorage.getItem('access_token');
+    return await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
   }
 
   async isAuthenticated(): Promise<boolean> {

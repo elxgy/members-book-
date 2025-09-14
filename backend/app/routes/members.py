@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.services import member_service, member_form_service, ai_description_service
 from app.utils.security import token_required
 from app.utils.permissions import permission_required, Role
+from app.utils.validators import validate_json_data, validate_query_params, Validator
 
 members_bp = Blueprint('members_bp', __name__)
 
@@ -24,28 +25,101 @@ def get_member(current_user, id):
 @members_bp.route('/<string:id>', methods=['PUT'])
 @token_required
 @permission_required(Role.MEMBER)
+@validate_json_data({
+    'name': {'required': False, 'type': 'string', 'min_length': 2, 'max_length': 100},
+    'email': {'required': False, 'type': 'email'},
+    'phone': {'required': False, 'type': 'phone'},
+    'business_segment': {'required': False, 'type': 'string'},
+    'company': {'required': False, 'type': 'string', 'max_length': 100},
+    'position': {'required': False, 'type': 'string', 'max_length': 100}
+})
 def update_member(current_user, id):
-    # Placeholder for updating a member
-    return jsonify({'message': f'Member {id} updated'})
+    try:
+        data = request.get_json()
+        
+        # Validar se o usuário pode atualizar este membro
+        if current_user['id'] != id and current_user['role'] != 'admin':
+            return jsonify({'error': 'Não autorizado a atualizar este membro'}), 403
+        
+        # Validar segmento de negócio se fornecido
+        if 'business_segment' in data and not Validator.validate_business_segment(data['business_segment']):
+            return jsonify({'error': 'Segmento de negócio inválido'}), 400
+        
+        # Atualizar membro
+        updated_member = member_service.update_member(id, data)
+        if updated_member:
+            return jsonify({'message': 'Membro atualizado com sucesso', 'member': updated_member})
+        return jsonify({'error': 'Membro não encontrado'}), 404
+    
+    except Exception as e:
+        return jsonify({'error': 'Erro interno do servidor', 'details': str(e)}), 500
 
 @members_bp.route('/search', methods=['GET'])
 @token_required
 @permission_required(Role.MEMBER)
+@validate_query_params({
+    'q': {'required': False, 'type': 'string'},
+    'segment': {'required': False, 'type': 'string'},
+    'limit': {'required': False, 'type': 'int'},
+    'offset': {'required': False, 'type': 'int'}
+})
 def search_members(current_user):
-    # Placeholder for searching members
-    return jsonify([{'id': 1, 'name': 'John Doe'}])
+    try:
+        query = request.args.get('q', '')
+        segment = request.args.get('segment')
+        limit = int(request.args.get('limit', 20))
+        offset = int(request.args.get('offset', 0))
+        
+        # Validar limites
+        if limit > 100:
+            return jsonify({'error': 'Limite máximo de 100 resultados'}), 400
+        
+        if limit < 1:
+            return jsonify({'error': 'Limite deve ser maior que 0'}), 400
+        
+        # Validar segmento se fornecido
+        if segment and not Validator.validate_business_segment(segment):
+            return jsonify({'error': 'Segmento de negócio inválido'}), 400
+        
+        # Buscar membros
+        members = member_service.search_members(query, segment, limit, offset)
+        return jsonify({
+            'members': members,
+            'total': len(members),
+            'limit': limit,
+            'offset': offset
+        })
+    
+    except ValueError as e:
+        return jsonify({'error': 'Parâmetros inválidos', 'details': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Erro interno do servidor', 'details': str(e)}), 500
 
 @members_bp.route('/forms/<string:form_id>/submit', methods=['POST'])
 @token_required
 @permission_required(Role.MEMBER)
+@validate_json_data({
+    'member_id': {'required': True, 'type': 'string'},
+    'form_data': {'required': True, 'type': 'dict'}
+})
 def submit_form(current_user, form_id):
-    data = request.get_json()
-    # Assuming the member_id is passed in the request data for now
-    member_id = data.get('member_id')
-    if not member_id:
-        return jsonify({"error": "Member ID is required"}), 400
-    response, status_code = member_form_service.submit_form(member_id, data)
-    return jsonify(response), status_code
+    try:
+        data = request.get_json()
+        member_id = data.get('member_id')
+        
+        # Validar se o usuário pode submeter formulário para este membro
+        if current_user['id'] != member_id and current_user['role'] != 'admin':
+            return jsonify({'error': 'Não autorizado a submeter formulário para este membro'}), 403
+        
+        # Validar se o formulário existe
+        if not form_id or len(form_id.strip()) == 0:
+            return jsonify({'error': 'ID do formulário é obrigatório'}), 400
+        
+        response, status_code = member_form_service.submit_form(member_id, data)
+        return jsonify(response), status_code
+    
+    except Exception as e:
+        return jsonify({'error': 'Erro interno do servidor', 'details': str(e)}), 500
 
 @members_bp.route('/<string:user_id>/generate-description', methods=['POST'])
 @token_required

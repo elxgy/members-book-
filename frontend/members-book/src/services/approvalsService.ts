@@ -1,4 +1,4 @@
-import { API_URL, MOCK_MODE } from '../constants/Config';
+import { API_URL, MOCK_MODE, TOKEN_STORAGE_KEY } from '../constants/Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_BASE_URL = API_URL;
@@ -49,7 +49,7 @@ class ApprovalsService {
       'Content-Type': 'application/json',
     };
 
-    const token = await AsyncStorage.getItem('access_token');
+    const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
     if (token) {
       defaultHeaders['x-access-token'] = token;
     }

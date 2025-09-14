@@ -1,117 +1,25 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { Colors } from '../constants/Colors';
 import MemberCard from '../components/MemberCard';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useMembers } from '../hooks/useMembers';
 
 const { width, height } = Dimensions.get('window');
 
 // Tipos de relevância
 type RelevanceLevel = 'Socios' | 'Infinity' | 'Disruption';
 
-interface Member {
-  id: number;
-  name: string;
-  company: string;
-  description: string;
-  photo: string;
-  email?: string;
-  linkedin?: string;
-  instagram?: string;
-  relevanceLevel: RelevanceLevel;
-  sectorId: number;
-  sector: string;
-}
-
-// Dados de exemplo dos membros organizados por setores
-const membersData: Member[] = [
-  // ADVOCACIA (sectorId: 1)
-  {
-    id: 1,
-    name: 'Dr. Carlos Silva',
-    company: 'Silva & Associados',
-    description: 'Advogado especialista em direito empresarial e tributário, com mais de 20 anos de experiência.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20lawyer%20businessman%20headshot%20portrait%20in%20suit%20confident%20legal%20executive&image_size=square',
-    email: 'carlos@silvaassociados.com',
-    linkedin: 'carlos-silva-advogado',
-    relevanceLevel: 'Socios',
-    sectorId: 1,
-    sector: 'ADVOCACIA'
-  },
-  {
-    id: 2,
-    name: 'Dra. Ana Costa',
-    company: 'Costa Advocacia',
-    description: 'Advogada criminalista e especialista em direitos humanos, reconhecida nacionalmente.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20lawyer%20headshot%20portrait%20in%20blazer%20confident%20legal%20professional&image_size=square',
-    email: 'ana@costaadvocacia.com',
-    linkedin: 'ana-costa-advogada',
-    relevanceLevel: 'Infinity',
-    sectorId: 1,
-    sector: 'ADVOCACIA'
-  },
-  // FOOD (sectorId: 2)
-  {
-    id: 3,
-    name: 'Chef Pedro Santos',
-    company: 'Restaurante Sabores',
-    description: 'Chef executivo e proprietário, especialista em culinária contemporânea brasileira.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20chef%20headshot%20portrait%20white%20uniform%20smiling%20culinary%20expert&image_size=square',
-    email: 'pedro@restaurantesabores.com',
-    instagram: '@chef_pedro_santos',
-    relevanceLevel: 'Socios',
-    sectorId: 2,
-    sector: 'FOOD'
-  },
-  {
-    id: 4,
-    name: 'Maria Oliveira',
-    company: 'Doces & Cia',
-    description: 'Confeiteira e empresária, especializada em doces artesanais e bolos personalizados.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20baker%20woman%20headshot%20portrait%20apron%20smiling%20pastry%20chef&image_size=square',
-    email: 'maria@docesecia.com',
-    instagram: '@doces_e_cia',
-    relevanceLevel: 'Disruption',
-    sectorId: 2,
-    sector: 'FOOD'
-  },
-  // TECNOLOGIA (sectorId: 20)
-  {
-    id: 5,
-    name: 'João Ferreira',
-    company: 'TechInova',
-    description: 'CTO e co-fundador, especialista em desenvolvimento de software e inteligência artificial.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20tech%20executive%20headshot%20portrait%20casual%20shirt%20confident%20developer&image_size=square',
-    email: 'joao@techinova.com',
-    linkedin: 'joao-ferreira-tech',
-    relevanceLevel: 'Infinity',
-    sectorId: 20,
-    sector: 'TECNOLOGIA'
-  },
-  // ARQUITETURA (sectorId: 3)
-  {
-    id: 6,
-    name: 'Arq. Lucia Mendes',
-    company: 'Mendes Arquitetura',
-    description: 'Arquiteta especializada em projetos residenciais de alto padrão e sustentabilidade.',
-    photo: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20architect%20headshot%20portrait%20blazer%20confident%20design%20professional&image_size=square',
-    email: 'lucia@mendesarquitetura.com',
-    linkedin: 'lucia-mendes-arquiteta',
-    relevanceLevel: 'Socios',
-    sectorId: 3,
-    sector: 'ARQUITETURA'
-  }
-];
-
 
 
 export default function MemberListScreen({ route, navigation }: any) {
   const { sector, sectorName } = route.params;
+  const { members, loading, error, refetch } = useMembers();
   
   // Filtrar membros por setor
-  const sectorMembers = membersData.filter(member => member.sector === sector);
+  const sectorMembers = members.filter(member => member.segment === sector);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -138,14 +46,30 @@ export default function MemberListScreen({ route, navigation }: any) {
           <Text style={styles.sectionTitle}>Conecte-se com os membros</Text>
           <Text style={styles.sectionDescription}>Explore os perfis e encontre oportunidades de networking</Text>
           
-          <FlatList
-            data={sectorMembers}
-            renderItem={({ item }) => <MemberCard member={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={false}
-            contentContainerStyle={styles.listContainer}
-          />
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#D4AF37" />
+              <Text style={styles.loadingText}>Carregando membros...</Text>
+            </View>
+          ) : error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+              <TouchableOpacity style={styles.retryButton} onPress={refetch}>
+                <Text style={styles.retryButtonText}>Tentar Novamente</Text>
+              </TouchableOpacity>
+            </View>
+          ) : sectorMembers.length > 0 ? (
+            <FlatList
+              data={sectorMembers}
+              renderItem={({ item }) => <MemberCard member={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
+              contentContainerStyle={styles.listContainer}
+            />
+          ) : (
+            <Text style={styles.noMembersText}>Nenhum membro encontrado neste setor.</Text>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -212,5 +136,45 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#666',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#ff4444',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  retryButton: {
+    backgroundColor: '#D4AF37',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  noMembersText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    paddingVertical: 40,
   },
 });

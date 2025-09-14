@@ -25,19 +25,9 @@ export const FontProvider: React.FC<FontProviderProps> = ({ children }) => {
   const [fontError, setFontError] = useState<Error | null>(null);
 
   useEffect(() => {
-    async function loadFonts() {
-      try {
-        await Font.loadAsync({
-          'Naville-Regular': require('../../assets/fonts/Naville-Regular.ttf'),
-        });
-        setFontsLoaded(true);
-      } catch (error) {
-        setFontError(error instanceof Error ? error : new Error('Failed to load fonts'));
-        console.error('Error loading fonts:', error);
-      }
-    }
-
-    loadFonts();
+    // Como a fonte customizada não está disponível, vamos usar fontes do sistema
+    // e marcar como carregada imediatamente
+    setFontsLoaded(true);
   }, []);
 
   const value = {

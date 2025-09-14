@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_URL } from '../constants/Config';
+import { API_URL, TOKEN_STORAGE_KEY } from '../constants/Config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_BASE_URL = API_URL || 'http://localhost:5000/api';
 
@@ -33,7 +34,7 @@ const profileService = {
   // Obter perfil do usuário atual
   getCurrentProfile: async (): Promise<any> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
       const response = await axios.get(`${API_BASE_URL}/members/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -49,7 +50,7 @@ const profileService = {
   // Atualizar perfil diretamente (sem aprovação)
   updateProfile: async (profileData: ProfileData): Promise<any> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
       const response = await axios.put(`${API_BASE_URL}/members/profile`, profileData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ const profileService = {
   // Enviar solicitação de atualização de perfil (requer aprovação)
   submitUpdateRequest: async (profileData: ProfileData): Promise<RequestResponse> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
       const response = await axios.post(`${API_BASE_URL}/members/profile/update-request`, profileData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,7 +84,7 @@ const profileService = {
   // Obter solicitações pendentes (apenas para administradores)
   getPendingRequests: async (): Promise<any[]> => {
     try {
-      const token = localStorage.getItem('token');
+      const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
       const response = await axios.get(`${API_BASE_URL}/members/profile/update-requests`, {
         headers: {
           Authorization: `Bearer ${token}`

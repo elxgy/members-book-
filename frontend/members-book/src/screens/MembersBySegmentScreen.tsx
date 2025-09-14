@@ -8,13 +8,15 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Text from '../components/Text';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { Member, membersBySegment } from '../types/Member';
+import { Member } from '../types/Member';
 import { useUser } from '../context/UserContext';
+import { useMembers } from '../hooks/useMembers';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type MembersBySegmentScreenNavigationProp = StackNavigationProp<
@@ -34,9 +36,12 @@ interface Props {
 
 export default function MembersBySegmentScreen({ navigation, route }: Props): React.JSX.Element {
   const { segment } = route.params;
-  const members = membersBySegment[segment] || [];
+  const { members, loading, error, refetch } = useMembers();
   const { isGuest } = useUser();
   const isGuestUser = isGuest();
+  
+  // Filter members by segment
+  const segmentMembers = members.filter(member => member.segment === segment);
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -107,8 +112,20 @@ export default function MembersBySegmentScreen({ navigation, route }: Props): Re
       {/* Members List */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.membersContainer}>
-          {members.length > 0 ? (
-            members.map(renderMemberCard)
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#D4AF37" />
+              <Text style={styles.loadingText} variant="body">Carregando membros...</Text>
+            </View>
+          ) : error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText} variant="body">{error}</Text>
+              <TouchableOpacity style={styles.retryButton} onPress={refetch}>
+                <Text style={styles.retryButtonText} variant="button">Tentar Novamente</Text>
+              </TouchableOpacity>
+            </View>
+          ) : segmentMembers.length > 0 ? (
+            segmentMembers.map(renderMemberCard)
           ) : (
             <Text style={styles.noMembersText} variant="body">Nenhum membro encontrado neste segmento.</Text>
           )}
@@ -248,5 +265,40 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
     paddingHorizontal: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#e74c3c',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: '#D4AF37',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

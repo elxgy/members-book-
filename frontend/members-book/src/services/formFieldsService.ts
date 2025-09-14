@@ -111,9 +111,9 @@ class FormFieldsService {
   }
 
   private async getAuthToken(): Promise<string | null> {
-    // Implementar lógica para obter token de autenticação
-    // Por exemplo, do AsyncStorage ou contexto de autenticação
-    return null;
+    const { TOKEN_STORAGE_KEY } = await import('../constants/Config');
+    const AsyncStorage = await import('@react-native-async-storage/async-storage');
+    return await AsyncStorage.default.getItem(TOKEN_STORAGE_KEY);
   }
 }
 

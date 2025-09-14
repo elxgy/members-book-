@@ -49,7 +49,7 @@ const Text: React.FC<CustomTextProps> = ({ style, variant, children, ...props })
 
 const styles = StyleSheet.create({
   baseText: {
-    fontFamily: 'Naville-Regular',
+    fontFamily: 'System',
   },
   h1: {
     fontSize: 32,

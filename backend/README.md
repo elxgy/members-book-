@@ -130,57 +130,264 @@ The application includes a feature that allows administrators to create dynamic 
 
 This ensures that all member bios maintain a high standard of quality and consistency, reflecting the professionalism of the community.
 
-## Installation & Setup
+## 🚀 Guia Completo de Instalação e Configuração
 
-### Prerequisites
-- Python 3.11+
-- MongoDB Atlas account (free tier available)
-- Git
+### 📋 Pré-requisitos
 
-### Local Development Setup
+Antes de começar, certifique-se de ter instalado:
 
-1. **Clone and Setup Environment**
+- **Python 3.11+** - [Download aqui](https://www.python.org/downloads/)
+- **Git** - [Download aqui](https://git-scm.com/downloads)
+- **Conta MongoDB Atlas** (gratuita) - [Criar conta](https://www.mongodb.com/atlas)
+- **Editor de código** (recomendado: VS Code)
+
+### 🛠️ Configuração Passo a Passo
+
+#### **Passo 1: Clonar o Repositório**
 ```bash
+# Clone o repositório
 git clone <repository-url>
 cd members-book/backend
+```
+
+#### **Passo 2: Criar Ambiente Virtual**
+```bash
+# Criar ambiente virtual
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Ativar ambiente virtual
+# No Windows:
+venv\Scripts\activate
+# No macOS/Linux:
+source venv/bin/activate
+
+# Verificar se o ambiente está ativo (deve aparecer (venv) no prompt)
+```
+
+#### **Passo 3: Instalar Dependências**
+```bash
+# Instalar todas as dependências necessárias
+pip install -r requirements.txt
+
+# Verificar se a instalação foi bem-sucedida
+pip list
+```
+
+#### **Passo 4: Configurar MongoDB Atlas**
+
+1. **Criar conta no MongoDB Atlas:**
+   - Acesse [MongoDB Atlas](https://www.mongodb.com/atlas)
+   - Crie uma conta gratuita
+   - Faça login no painel
+
+2. **Criar um cluster:**
+   - Clique em "Build a Database"
+   - Escolha "M0 Sandbox" (gratuito)
+   - Selecione uma região próxima
+   - Clique em "Create Cluster"
+
+3. **Configurar acesso:**
+   - Vá em "Database Access" → "Add New Database User"
+   - Crie um usuário com senha
+   - Vá em "Network Access" → "Add IP Address"
+   - Adicione "0.0.0.0/0" (permite acesso de qualquer IP)
+
+4. **Obter string de conexão:**
+   - Clique em "Connect" no seu cluster
+   - Escolha "Connect your application"
+   - Copie a string de conexão
+   - Substitua `<password>` pela senha do usuário
+
+#### **Passo 5: Configurar Variáveis de Ambiente**
+
+```bash
+# Copiar arquivo de exemplo
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com suas configurações:
+
+```env
+# Configurações básicas
+SECRET_KEY=sua_chave_secreta_aqui_123456
+JWT_SECRET=sua_jwt_secret_aqui_789012
+
+# Configurações do banco de dados (OBRIGATÓRIO)
+MONGODB_URI=mongodb+srv://seu_usuario:sua_senha@cluster.mongodb.net/members_book
+
+# Configurações de APIs externas (opcional)
+OPENAI_KEY=sk-proj-sua_chave_openai_aqui
+
+# Configurações do servidor
+SERVER_HOST=0.0.0.0
+SERVER_PORT=5002
+DEBUG=True
+
+# Configurações de CORS (adicione as URLs do seu frontend)
+CORS_ORIGINS=http://localhost:8081,http://localhost:8082,http://localhost:8083,http://10.20.192.127:8081,http://10.20.192.127:8082,http://10.20.192.127:8083
+
+# Configurações de segurança
+JWT_ACCESS_TOKEN_EXPIRES=3600
+BCRYPT_LOG_ROUNDS=12
+
+# Configurações de rate limiting
+RATE_LIMIT_ENABLED=True
+RATE_LIMIT_DEFAULT=100 per hour
+```
+
+#### **Passo 6: Popular o Banco de Dados (Seed)**
+
+```bash
+# Executar script de seed para criar usuários de teste
+python seed.py
+```
+
+Este comando criará os seguintes usuários de teste:
+- **Admin:** `admin@test.com` / `password`
+- **Membro:** `member@test.com` / `password`
+- **Convidado:** `guest@test.com` / `password`
+
+#### **Passo 7: Iniciar o Servidor**
+
+```bash
+# Método recomendado - usando o script start_server.py
+python start_server.py
+
+# Ou com opções personalizadas:
+python start_server.py --host 0.0.0.0 --port 5002 --debug
+
+# Método alternativo:
+python app/main.py
+```
+
+**✅ Servidor iniciado com sucesso!**
+- URL local: `http://localhost:5002`
+- URL da rede: `http://10.20.192.127:5002` (substitua pelo seu IP)
+- API Docs: `http://localhost:5002/api/docs`
+
+### 🔐 Credenciais de Teste
+
+Após executar o seed, você pode usar as seguintes credenciais para testar:
+
+- **👑 Admin:**
+  - **Email:** `admin@test.com`
+  - **Senha:** `password`
+  - **Permissões:** Acesso total ao sistema
+
+- **👤 Membro:**
+  - **Email:** `member@test.com`
+  - **Senha:** `password`
+  - **Permissões:** Acesso de membro padrão
+
+- **🎫 Convidado:**
+  - **Email:** `guest@test.com`
+  - **Senha:** `password`
+  - **Permissões:** Acesso limitado
+
+### 🔧 Troubleshooting - Problemas Comuns
+
+#### **❌ Erro: "ModuleNotFoundError"**
+```bash
+# Solução: Verificar se o ambiente virtual está ativo
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Reinstalar dependências
 pip install -r requirements.txt
 ```
 
-2. **MongoDB Atlas Setup**
-- Create a free MongoDB Atlas account at https://www.mongodb.com/atlas
-- Create a new cluster
-- Get your connection string
-- Whitelist your IP address
-
-3. **Environment Configuration**
+#### **❌ Erro: "pymongo.errors.ServerSelectionTimeoutError"**
 ```bash
-cp .env.example .env
-# Edit .env with your configuration:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/members_book
-# SECRET_KEY=your-secret-key
-# JWT_SECRET=your-jwt-secret
+# Problema: Não consegue conectar ao MongoDB
+# Soluções:
+# 1. Verificar se a string MONGODB_URI está correta no .env
+# 2. Verificar se o IP está liberado no MongoDB Atlas
+# 3. Verificar se o usuário/senha estão corretos
+# 4. Verificar conexão com a internet
 ```
 
-4. **Run Development Server**
+#### **❌ Erro: "Port already in use"**
 ```bash
-# Flask
-python app/main.py
-# Server will run on http://localhost:5000
+# Solução: Usar uma porta diferente
+python start_server.py --port 5003
 
-### Test Credentials
-You can use the following credentials to test the application with different user roles:
+# Ou matar o processo que está usando a porta
+# Windows:
+netstat -ano | findstr :5002
+taskkill /PID <PID_NUMBER> /F
 
--   **Admin:**
-    -   **Email:** `admin@test.com`
-    -   **Password:** `password`
--   **Member:**
-    -   **Email:** `member@test.com`
-    -   **Password:** `password`
--   **Guest:**
-    -   **Email:** `guest@test.com`
-    -   **Password:** `password`
+# macOS/Linux:
+lsof -ti:5002 | xargs kill -9
+```
+
+#### **❌ Erro: "CORS policy"**
+```bash
+# Solução: Adicionar a URL do frontend no .env
+# Editar CORS_ORIGINS no arquivo .env:
+CORS_ORIGINS=http://localhost:8081,http://localhost:8082,http://localhost:8083,http://SEU_IP:PORTA_FRONTEND
+
+# Reiniciar o servidor após alterar
+```
+
+#### **❌ Erro: "JWT decode error"**
+```bash
+# Solução: Verificar se JWT_SECRET está configurado no .env
+# Limpar tokens salvos no frontend/browser
+# Fazer login novamente
+```
+
+#### **❌ Servidor não responde na rede**
+```bash
+# Verificar se o servidor está rodando com host 0.0.0.0
+python start_server.py --host 0.0.0.0 --port 5002
+
+# Verificar firewall do Windows
+# Permitir Python através do firewall
+
+# Verificar IP da máquina
+ipconfig  # Windows
+ifconfig  # macOS/Linux
+```
+
+### 📱 Testando a API
+
+#### **Teste rápido com curl:**
+```bash
+# Testar se o servidor está respondendo
+curl http://localhost:5002/api/health
+
+# Testar login de convidado
+curl -X POST http://localhost:5002/api/auth/guest-login \
+  -H "Content-Type: application/json" \
+  -d '{"device_id": "test-device"}'
+```
+
+#### **Teste no navegador:**
+- Acesse: `http://localhost:5002/api/docs`
+- Deve abrir a documentação da API
+- Teste os endpoints diretamente na interface
+
+### 🔄 Comandos Úteis
+
+```bash
+# Parar o servidor
+Ctrl + C
+
+# Reativar ambiente virtual
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Atualizar dependências
+pip install -r requirements.txt --upgrade
+
+# Verificar logs do servidor
+# Os logs aparecem no terminal onde o servidor está rodando
+
+# Resetar banco de dados
+python seed.py
+
+# Verificar se todas as dependências estão instaladas
+pip check
 ```
 
 ## Security Features
