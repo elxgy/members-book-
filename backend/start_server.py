@@ -26,14 +26,14 @@ def main():
     config = Config()
     
     host = args.host
-    port = args.port if args.port else config.SERVER_PORT
+    port = args.port if args.port else 5000
     
     if args.debug:
         debug = True
     elif args.no_debug:
         debug = False
     else:
-        debug = config.DEBUG
+        debug = False
     
     print(f"\n=== Starting Flask Server ===")
     print(f"Host: {host}")
