@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../constants/Config';
+import { API_URL, MOCK_MODE } from '../constants/Config';
 
 const API_BASE_URL = API_URL;
 
@@ -57,6 +57,45 @@ class AuthService {
   }
 
   async login(credentials: LoginRequest): Promise<{ success: boolean; user?: User; message?: string }> {
+    if (MOCK_MODE) {
+      console.log('--- MOCK MODE: Faking login ---');
+      
+      let mockUser: User;
+
+      switch (credentials.email.toLowerCase()) {
+        case 'admin@test.com':
+          mockUser = {
+            id: 'mock_admin_id',
+            email: credentials.email,
+            name: 'Mock Admin',
+            role: 'ADMIN',
+          };
+          break;
+        case 'member@test.com':
+          mockUser = {
+            id: 'mock_member_id',
+            email: credentials.email,
+            name: 'Mock Member',
+            role: 'MEMBER',
+          };
+          break;
+        case 'guest@test.com':
+        default:
+          mockUser = {
+            id: 'mock_guest_id',
+            email: credentials.email,
+            name: 'Mock Guest',
+            role: 'GUEST',
+          };
+          break;
+      }
+
+      await AsyncStorage.setItem('access_token', 'mock_token');
+      return {
+        success: true,
+        user: mockUser,
+      };
+    }
     try {
       const response: LoginResponse = await this.makeRequest('/auth/login', {
         method: 'POST',
@@ -137,8 +176,23 @@ class AuthService {
   }
 
   async isAuthenticated(): Promise<boolean> {
+    if (MOCK_MODE) {
+      console.log('--- MOCK MODE: Faking authentication ---');
+      const token = await this.getStoredToken();
+      return !!token;
+    }
     const token = await this.getStoredToken();
-    return !!token;
+    if (!token) {
+      return false;
+    }
+    try {
+      await this.makeRequest('/auth/validate', {
+        method: 'POST',
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
 

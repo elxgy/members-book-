@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.services import auth_service
+from app.utils.security import token_required
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -31,3 +32,8 @@ def guest_login():
     """Guest login endpoint - no credentials required"""
     response, status_code = auth_service.guest_login()
     return jsonify(response), status_code
+
+@auth_bp.route('/validate', methods=['POST'])
+@token_required
+def validate(current_user):
+    return jsonify({"message": "Token is valid"}), 200
