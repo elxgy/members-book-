@@ -71,6 +71,110 @@ def submit_update_request(request_data):
     except Exception as e:
         return {"error": f"Failed to submit update request: {str(e)}"}, 500
 
+def approve_update_request(request_id, admin_id):
+    """Approve a profile update request and apply the changes"""
+    try:
+        # Find the update request
+        request = update_requests_collection.find_one({"_id": ObjectId(request_id)})
+        
+        if not request:
+            return {"error": "Update request not found"}, 404
+            
+        if request['status'] != "pending":
+            return {"error": f"Request already {request['status']}"}, 400
+            
+        # Get the requested changes
+        user_id = request['user_id']
+        changes = request['requested_changes']
+        
+        # Update the member profile with the approved changes
+        update_result = members_collection.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": changes}
+        )
+        
+        if update_result.matched_count == 0:
+            return {"error": "Member not found"}, 404
+            
+        # Update the request status
+        update_requests_collection.update_one(
+            {"_id": ObjectId(request_id)},
+            {
+                "$set": {
+                    "status": "approved",
+                    "reviewed_at": datetime.utcnow(),
+                    "reviewed_by": admin_id
+                }
+            }
+        )
+        
+        return {"message": "Update request approved and changes applied"}, 200
+        
+    except Exception as e:
+        return {"error": f"Failed to approve update request: {str(e)}"}, 500
+
+def reject_update_request(request_id, admin_id, rejection_reason=""):
+    """Reject a profile update request"""
+    try:
+        # Find the update request
+        request = update_requests_collection.find_one({"_id": ObjectId(request_id)})
+        
+        if not request:
+            return {"error": "Update request not found"}, 404
+            
+        if request['status'] != "pending":
+            return {"error": f"Request already {request['status']}"}, 400
+            
+        # Update the request status
+        update_requests_collection.update_one(
+            {"_id": ObjectId(request_id)},
+            {
+                "$set": {
+                    "status": "rejected",
+                    "reviewed_at": datetime.utcnow(),
+                    "reviewed_by": admin_id,
+                    "rejection_reason": rejection_reason
+                }
+            }
+        )
+        
+        return {"message": "Update request rejected"}, 200
+        
+    except Exception as e:
+        return {"error": f"Failed to reject update request: {str(e)}"}, 500
+
+def get_pending_update_requests():
+    """Get all pending profile update requests"""
+    try:
+        # Find all pending update requests
+        requests = update_requests_collection.find({"status": "pending"})
+        
+        # Convert ObjectId to string for JSON serialization
+        result = []
+        for req in requests:
+            # Get user details
+            user = members_collection.find_one({"_id": ObjectId(req['user_id'])})
+            user_info = {"name": "Unknown", "email": "Unknown"} if not user else {
+                "name": user.get("name", "Unknown"),
+                "email": user.get("email", "Unknown")
+            }
+            
+            # Format the request
+            formatted_req = {
+                "request_id": str(req["_id"]),
+                "user_id": req["user_id"],
+                "user_info": user_info,
+                "request_type": req["request_type"],
+                "requested_changes": req["requested_changes"],
+                "created_at": req["created_at"].isoformat() if isinstance(req["created_at"], datetime) else req["created_at"]
+            }
+            result.append(formatted_req)
+            
+        return result
+        
+    except Exception as e:
+        raise Exception(f"Failed to get pending update requests: {str(e)}")
+
 # Guest-specific service methods
 def get_public_showcases():
     """Get public member showcases for guest viewing (verified members only)"""

@@ -144,7 +144,16 @@ export default function AdminFormFieldsScreen({ navigation }: Props): React.JSX.
         >
           <Icon name="arrow-left" size={20} color="#D4AF37" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle} variant="h2">GERENCIAR CAMPOS</Text>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle} variant="h2">GERENCIAR CAMPOS</Text>
+          <TouchableOpacity 
+            style={styles.userManagementButton}
+            onPress={() => navigation.navigate('UserManagement' as never)}
+          >
+            <Icon name="users" size={16} color="#D4AF37" />
+            <Text style={styles.userManagementText}>Usuários</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.placeholder} />
       </View>
 
@@ -203,12 +212,34 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
   },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#D4AF37',
     textAlign: 'center',
     letterSpacing: 1.2,
+    marginBottom: 8,
+  },
+  userManagementButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+  },
+  userManagementText: {
+    fontSize: 12,
+    color: '#D4AF37',
+    fontWeight: '600',
+    marginLeft: 4,
   },
   placeholder: {
     width: 36,

@@ -187,3 +187,45 @@ def submit_profile_update_request(current_user):
         
     except Exception as e:
         return jsonify({"error": "Failed to submit update request"}), 500
+
+@members_bp.route('/profile/update-request/<string:request_id>/approve', methods=['POST'])
+@token_required
+@permission_required(Role.ADMIN)
+def approve_profile_update_request(current_user, request_id):
+    """Approve a profile update request (admin only)"""
+    try:
+        # Call service method to approve the request
+        response, status_code = member_service.approve_update_request(request_id, current_user.id)
+        return jsonify(response), status_code
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to approve update request"}), 500
+
+@members_bp.route('/profile/update-request/<string:request_id>/reject', methods=['POST'])
+@token_required
+@permission_required(Role.ADMIN)
+def reject_profile_update_request(current_user, request_id):
+    """Reject a profile update request (admin only)"""
+    try:
+        data = request.get_json() or {}
+        rejection_reason = data.get('reason', '')
+        
+        # Call service method to reject the request
+        response, status_code = member_service.reject_update_request(request_id, current_user.id, rejection_reason)
+        return jsonify(response), status_code
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to reject update request"}), 500
+
+@members_bp.route('/profile/update-requests', methods=['GET'])
+@token_required
+@permission_required(Role.ADMIN)
+def get_pending_update_requests(current_user):
+    """Get all pending profile update requests (admin only)"""
+    try:
+        # Call service method to get pending requests
+        requests = member_service.get_pending_update_requests()
+        return jsonify(requests), 200
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to retrieve pending update requests"}), 500
