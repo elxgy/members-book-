@@ -1,6 +1,5 @@
 from backend.app.models.message import Message
 from backend.app.utils.database import messages_collection
-from bson import ObjectId
 
 def send_message(data):
     new_message = Message(

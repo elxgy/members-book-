@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import authService from '../services/authService';
 
 interface User {
   id: string;
   email: string;
   name?: string;
+  role?: string;
 }
 
 interface UserContextType {
@@ -12,6 +14,8 @@ interface UserContextType {
   loading: boolean;
   login: (userData: User) => Promise<boolean>;
   logout: () => Promise<void>;
+  isAuthenticated: () => Promise<boolean>;
+  hasRole: (role: string) => boolean;
 }
 
 interface UserProviderProps {
@@ -39,11 +43,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const checkUserSession = async () => {
     try {
       const userData = await AsyncStorage.getItem('user');
-      if (userData) {
+      const isAuth = await authService.isAuthenticated();
+      
+      if (userData && isAuth) {
         setUser(JSON.parse(userData));
+      } else {
+        // Clear invalid session
+        await AsyncStorage.removeItem('user');
+        setUser(null);
       }
     } catch (error) {
       console.error('Error checking user session:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -62,11 +73,23 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     try {
+      await authService.logout();
       await AsyncStorage.removeItem('user');
       setUser(null);
     } catch (error) {
-      console.error('Error removing user data:', error);
+      console.error('Error during logout:', error);
+      // Force local logout even if backend call fails
+      await AsyncStorage.removeItem('user');
+      setUser(null);
     }
+  };
+
+  const isAuthenticated = async (): Promise<boolean> => {
+    return await authService.isAuthenticated();
+  };
+
+  const hasRole = (role: string): boolean => {
+    return user?.role?.toUpperCase() === role.toUpperCase();
   };
 
   const value = {
@@ -74,6 +97,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     loading,
     login,
     logout,
+    isAuthenticated,
+    hasRole,
   };
 
   return (

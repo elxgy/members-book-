@@ -1,6 +1,5 @@
 from functools import wraps
 from flask import jsonify
-from backend.app.models.member import Member
 
 class Role:
     GUEST = "guest"

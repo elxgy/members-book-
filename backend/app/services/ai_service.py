@@ -1,7 +1,6 @@
 import openai
 from backend.config import Config
 from backend.app.utils.database import ai_recommendations_collection
-from bson import ObjectId
 
 openai.api_key = Config.OPENAI_KEY
 

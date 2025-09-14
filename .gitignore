@@ -142,3 +142,5 @@ vite.config.ts.timestamp-*
 *__pycache__/
 .vercel/
 .venv/
+*pycache*
+__pycache__/

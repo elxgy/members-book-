@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Optional, List, Any
+from typing import Optional, List
 from datetime import datetime
 from backend.app.models.deal import Deal
 

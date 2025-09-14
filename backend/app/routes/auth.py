@@ -18,7 +18,8 @@ def register():
 @auth_bp.route('/refresh', methods=['POST'])
 def refresh():
     # This would typically involve a refresh token
-    return jsonify({'message': 'Token refreshed'})
+    # For now, return a placeholder response with correct field name
+    return jsonify({'access_token': 'refreshed_token', 'message': 'Token refreshed'})
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():

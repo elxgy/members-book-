@@ -23,13 +23,16 @@ def create_user(data):
 
     # Hash password if provided
     password_hash = None
+    password_plain = None
     if 'password' in data:
         password_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        password_plain = data['password']  # Store plain text password for development
 
     new_user = Member(
         name=data['name'],
         email=data['email'],
         password_hash=password_hash,
+        password_plain=password_plain,
         tier=data.get('tier', 'disruption'),
         contact_info=data.get('contact_info', {}),
         user_type=data.get('user_type', 'member'),
@@ -57,6 +60,7 @@ def update_user(user_id, data):
     if 'password' in data:
         password_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         update_data['password_hash'] = password_hash
+        update_data['password_plain'] = data['password']  # Store plain text password for development
     
     if not update_data:
         return {"error": "No valid fields to update"}, 400
