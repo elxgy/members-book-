@@ -19,7 +19,7 @@ export interface MembersBySegment {
 
 // Dados de exemplo baseados na imagem fornecida
 export const membersBySegment: MembersBySegment = {
-  'COMÉRCIO': [
+  'TECNOLOGIA': [
     {
       id: '1',
       name: 'Pablo Veggeti da Silva',
