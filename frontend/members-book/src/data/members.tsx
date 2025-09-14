@@ -3,7 +3,7 @@ import type { Member } from "../types"
 export const members: Member[] = [
   {
     id: "1",
-    name: "Wander Miranda",
+    name: "Pablo Veggeti da Silva",
     company: "Enjoy Educação",
     sector: "EDUCAÇÃO",
     hierarchy: "socios",
