@@ -1,7 +1,8 @@
 import type { Member, ChatRoom, ChatMessage, AdminUser, SystemMetric } from '../types';
+import { API_URL } from '../constants/Config';
 
 // Base API configuration
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.membersbook.com';
+const API_BASE_URL = API_URL;
 const API_TIMEOUT = 10000;
 
 class ApiError extends Error {
