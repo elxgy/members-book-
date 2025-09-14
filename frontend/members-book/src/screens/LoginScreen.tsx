@@ -218,6 +218,13 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
               </View>
 
               <TouchableOpacity
+                style={styles.signupLink}
+                onPress={() => navigation.navigate('SignupRequest')}
+              >
+                <Text style={styles.signupLinkText} variant="bodySmall">Solicitar Inscrição</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={[styles.loginButton, loading && styles.loginButtonDisabled]}
                 onPress={handleLogin}
                 disabled={loading}
@@ -332,6 +339,18 @@ const styles = StyleSheet.create({
   },
   eyeButton: {
     padding: 15,
+  },
+  signupLink: {
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  signupLinkText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#FFFFFF',
+    letterSpacing: 1,
+    textDecorationLine: 'underline',
   },
   loginButton: {
     backgroundColor: '#D4AF37',

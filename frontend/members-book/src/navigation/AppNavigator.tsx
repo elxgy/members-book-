@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationProp } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import SignupRequestScreen from '../screens/SignupRequestScreen';
 import SegmentListScreen from '../screens/SegmentListScreen';
 import MembersBySegmentScreen from '../screens/MembersBySegmentScreen';
 import MemberDetailScreen from '../screens/MemberDetailScreen';
@@ -16,6 +17,7 @@ import AdminApprovalScreen from '../screens/AdminApprovalScreen';
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
+  SignupRequest: undefined;
   SegmentList: undefined;
   MembersBySegment: { segment: string };
   MemberDetail: { memberId: string; segment: string };
@@ -41,6 +43,7 @@ export default function AppNavigator() {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignupRequest" component={SignupRequestScreen} />
       <Stack.Screen name="SegmentList" component={SegmentListScreen} />
       <Stack.Screen name="MembersBySegment" component={MembersBySegmentScreen} />
       <Stack.Screen name="MemberDetail" component={MemberDetailScreen} />
