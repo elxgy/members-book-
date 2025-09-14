@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from backend.config import Config
+from config import Config
 
 client = MongoClient(Config.MONGO_URI)
 db = client.get_database("Cluster0-Members-book")

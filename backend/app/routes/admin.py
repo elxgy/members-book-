@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from backend.app.services import admin_service, validation_service
-from backend.app.utils.security import token_required
-from backend.app.utils.permissions import permission_required, Role
+from app.services import admin_service, validation_service
+from app.utils.security import token_required
+from app.utils.permissions import permission_required, Role
 
 admin_bp = Blueprint('admin_bp', __name__)
 

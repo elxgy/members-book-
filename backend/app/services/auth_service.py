@@ -1,9 +1,9 @@
 import bcrypt
 import jwt
 from datetime import datetime, timedelta
-from backend.app.models.member import Member
-from backend.app.utils.database import members_collection
-from backend.config import Config
+from app.models.member import Member
+from app.utils.database import members_collection
+from config import Config
 
 def register_user(data):
     # Check if user already exists

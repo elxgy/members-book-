@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, List
 from datetime import datetime
-from backend.app.models.deal import Deal
+from .deal import Deal
 
 class MemberInfo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')

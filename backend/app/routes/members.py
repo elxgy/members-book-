@@ -1,7 +1,7 @@
-from flask import Blueprint, jsonify, request
-from backend.app.services import member_service, member_form_service, ai_description_service
-from backend.app.utils.security import token_required
-from backend.app.utils.permissions import permission_required, Role
+from flask import Blueprint, request, jsonify
+from app.services import member_service, member_form_service, ai_description_service
+from app.utils.security import token_required
+from app.utils.permissions import permission_required, Role
 
 members_bp = Blueprint('members_bp', __name__)
 
