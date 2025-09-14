@@ -13,7 +13,7 @@ import ChatScreen from '../screens/ChatScreen';
 import AdminFormFieldsScreen from '../screens/AdminFormFieldsScreen';
 import UserManagementScreen from '../screens/UserManagementScreen';
 import AdminApprovalScreen from '../screens/AdminApprovalScreen';
-import AdminScreen from '../screens/AdminScreen';
+
 
 export type RootStackParamList = {
   Home: undefined;
@@ -55,7 +55,7 @@ export default function AppNavigator() {
       <Stack.Screen name="AdminFormFields" component={AdminFormFieldsScreen} />
       <Stack.Screen name="UserManagement" component={UserManagementScreen} />
       <Stack.Screen name="AdminApproval" component={AdminApprovalScreen} />
-      <Stack.Screen name="AdminScreen" component={AdminScreen} />
+      <Stack.Screen name="AdminScreen" component={AdminFormFieldsScreen} />
     </Stack.Navigator>
   );
 }

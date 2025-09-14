@@ -26,7 +26,7 @@ def main():
     config = Config()
     
     host = args.host
-    port = args.port if args.port else 5001
+    port = args.port if args.port else 5002
     
     if args.debug:
         debug = True
