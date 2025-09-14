@@ -13,13 +13,16 @@ def register_user(data):
 
     hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
 
+    # Determine user type based on is_admin flag
+    user_type = 'admin' if data.get('is_admin', False) else 'member'
+    
     new_user = Member(
         name=data['name'],
         email=data['email'],
         password_hash=hashed_password.decode('utf-8'),
         tier='disruption',  # Default tier
         contact_info={},
-        user_type='member',
+        user_type=user_type,
     )
 
     result = members_collection.insert_one(new_user.dict(by_alias=True, exclude_none=True))
@@ -38,3 +41,20 @@ def login_user(data):
     }, Config.JWT_SECRET_KEY, algorithm="HS256")
 
     return {"token": token, "user_type": user['user_type']}, 200
+
+def guest_login():
+    """Login as guest user without credentials"""
+    # Find the default guest user
+    guest_user = members_collection.find_one({"email": "guest@test.com", "user_type": "guest"})
+    
+    if not guest_user:
+        return {"error": "Guest user not found"}, 404
+    
+    # Generate JWT token for guest user
+    token = jwt.encode({
+        'public_id': str(guest_user['_id']),
+        'role': 'guest',
+        'exp': datetime.utcnow() + timedelta(minutes=30)
+    }, Config.JWT_SECRET_KEY, algorithm="HS256")
+    
+    return {"token": token, "user_type": "guest"}, 200

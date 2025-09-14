@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Text from './Text';
 import { Colors } from '../constants/Colors';
 
 interface HierarchyBadgeProps {
@@ -50,7 +51,7 @@ const HierarchyBadge: React.FC<HierarchyBadgeProps> = ({ hierarchy, size = 'medi
         styles.badgeText,
         sizeStyles.text,
         { color: config.textColor }
-      ]}>
+      ]} variant="caption">
         {config.label}
       </Text>
     </View>

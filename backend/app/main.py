@@ -6,6 +6,7 @@ from backend.app.routes.ai import ai_bp
 from backend.app.routes.admin import admin_bp
 from backend.app.routes.forms import forms_bp
 from backend.app.routes.deals import deals_bp
+from backend.app.routes.value_requests import value_requests_bp
 from backend.config import Config
 
 app = Flask(__name__)
@@ -19,6 +20,7 @@ app.register_blueprint(ai_bp, url_prefix='/api/ai')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(forms_bp, url_prefix='/api/admin/forms')
 app.register_blueprint(deals_bp, url_prefix='/api/deals')
+app.register_blueprint(value_requests_bp, url_prefix='/api/value-requests')
 
 if __name__ == '__main__':
     app.run(debug=True)

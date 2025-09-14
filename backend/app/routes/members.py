@@ -53,3 +53,137 @@ def submit_form(current_user, form_id):
 def generate_description_route(current_user, user_id):
     response, status_code = ai_description_service.generate_description(user_id)
     return jsonify(response), status_code
+
+# Guest-specific routes for viewing showcases and segments
+@members_bp.route('/showcase', methods=['GET'])
+@token_required
+@permission_required(Role.GUEST)
+def get_member_showcases(current_user):
+    """Get public member profile showcases for guest viewing"""
+    try:
+        # Get only verified/approved member showcases with limited public information
+        showcases = member_service.get_public_showcases()
+        return jsonify(showcases)
+    except Exception as e:
+        return jsonify({"error": "Failed to retrieve showcases"}), 500
+
+@members_bp.route('/segments', methods=['GET'])
+@token_required
+@permission_required(Role.GUEST)
+def get_business_segments(current_user):
+    """Get available business segments for guest viewing"""
+    try:
+        segments = member_service.get_business_segments()
+        return jsonify(segments)
+    except Exception as e:
+        return jsonify({"error": "Failed to retrieve segments"}), 500
+
+@members_bp.route('/showcase/<string:segment>', methods=['GET'])
+@token_required
+@permission_required(Role.GUEST)
+def get_showcases_by_segment(current_user, segment):
+    """Get member profile showcases filtered by business segment"""
+    try:
+        # Get showcases filtered by segment with public information only
+        showcases = member_service.get_showcases_by_segment(segment)
+        if showcases is not None:
+            return jsonify(showcases)
+        return jsonify({"error": "Invalid segment or no showcases found"}), 404
+    except Exception as e:
+        return jsonify({"error": "Failed to retrieve showcases for segment"}), 500
+
+# User profile management routes
+@members_bp.route('/profile', methods=['GET'])
+@token_required
+@permission_required(Role.MEMBER)
+def get_own_profile(current_user):
+    """Get current user's profile information"""
+    try:
+        profile = member_service.get_member_by_id(current_user.id)
+        if profile:
+            return jsonify(profile)
+        return jsonify({"error": "Profile not found"}), 404
+    except Exception as e:
+        return jsonify({"error": "Failed to retrieve profile"}), 500
+
+@members_bp.route('/profile', methods=['PUT'])
+@token_required
+@permission_required(Role.MEMBER)
+def update_own_profile(current_user):
+    """Update current user's profile information"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        # Validate description length
+        if 'description' in data:
+            description = data['description']
+            if len(description) > 1000:
+                return jsonify({"error": "Description must be 1000 characters or less"}), 400
+        
+        # Validate deal values
+        if 'total_deal_value' in data:
+            try:
+                deal_value = float(data['total_deal_value'])
+                if deal_value < 0:
+                    return jsonify({"error": "Deal value must be positive"}), 400
+            except (ValueError, TypeError):
+                return jsonify({"error": "Invalid deal value format"}), 400
+        
+        # Validate number of deals
+        if 'number_of_deals' in data:
+            try:
+                num_deals = int(data['number_of_deals'])
+                if num_deals < 0:
+                    return jsonify({"error": "Number of deals must be positive"}), 400
+            except (ValueError, TypeError):
+                return jsonify({"error": "Invalid number of deals format"}), 400
+        
+        # Update profile with validated data
+        response, status_code = member_service.update_member_profile(current_user.id, data)
+        return jsonify(response), status_code
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to update profile"}), 500
+
+@members_bp.route('/profile/update-request', methods=['POST'])
+@token_required
+@permission_required(Role.MEMBER)
+def submit_profile_update_request(current_user):
+    """Submit a profile update request that requires admin approval"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        # Add user ID to the request
+        data['user_id'] = current_user.id
+        data['request_type'] = 'profile_update'
+        
+        # Validate the request data
+        if 'description' in data and len(data['description']) > 1000:
+            return jsonify({"error": "Description must be 1000 characters or less"}), 400
+        
+        if 'total_deal_value' in data:
+            try:
+                deal_value = float(data['total_deal_value'])
+                if deal_value < 0:
+                    return jsonify({"error": "Deal value must be positive"}), 400
+            except (ValueError, TypeError):
+                return jsonify({"error": "Invalid deal value format"}), 400
+        
+        if 'number_of_deals' in data:
+            try:
+                num_deals = int(data['number_of_deals'])
+                if num_deals < 0:
+                    return jsonify({"error": "Number of deals must be positive"}), 400
+            except (ValueError, TypeError):
+                return jsonify({"error": "Invalid number of deals format"}), 400
+        
+        # Submit the update request
+        response, status_code = member_service.submit_update_request(data)
+        return jsonify(response), status_code
+        
+    except Exception as e:
+        return jsonify({"error": "Failed to submit update request"}), 500

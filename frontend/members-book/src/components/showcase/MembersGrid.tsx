@@ -2,11 +2,11 @@ import React from 'react';
 import {
   View,
   FlatList,
-  Text,
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
+import Text from '../Text';
 import { Colors } from '../../constants/Colors';
 import MemberCard from './MemberCard';
 import type { Member } from '../../types';
@@ -43,7 +43,7 @@ const MembersGrid: React.FC<MembersGridProps> = ({
       return (
         <View style={styles.emptyContainer}>
           <ActivityIndicator size="large" color={Colors.primary} />
-          <Text style={styles.emptyText}>Carregando membros...</Text>
+          <Text style={styles.emptyText} variant="body">Carregando membros...</Text>
         </View>
       );
     }
@@ -51,8 +51,8 @@ const MembersGrid: React.FC<MembersGridProps> = ({
     if (searchQuery.length > 0) {
       return (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>Nenhum resultado encontrado</Text>
-          <Text style={styles.emptyText}>
+          <Text style={styles.emptyTitle} variant="title">Nenhum resultado encontrado</Text>
+          <Text style={styles.emptyText} variant="body">
             Não encontramos membros que correspondam à sua busca por "{searchQuery}"
           </Text>
         </View>
@@ -61,8 +61,8 @@ const MembersGrid: React.FC<MembersGridProps> = ({
 
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyTitle}>Nenhum membro encontrado</Text>
-        <Text style={styles.emptyText}>
+        <Text style={styles.emptyTitle} variant="title">Nenhum membro encontrado</Text>
+        <Text style={styles.emptyText} variant="body">
           Não há membros disponíveis no momento.
         </Text>
       </View>

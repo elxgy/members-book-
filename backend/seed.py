@@ -6,9 +6,10 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
 import bcrypt
-from backend.app.utils.database import members_collection, members_info_collection
+from backend.app.utils.database import members_collection, members_info_collection, value_requests_collection
 from backend.app.models.member import Member
 from backend.app.models.member_info import MemberInfo
+from backend.app.models.value_request import ValueRequest, RequestType, RequestStatus
 from backend.app.services import ai_description_service
 from datetime import datetime
 from bson import ObjectId
@@ -111,6 +112,39 @@ def seed_members_info():
             members_info_collection.insert_one(member_info_data)
             print(f"Member info for user {member['email']} seeded.")
 
+def seed_value_requests():
+    print("Seeding value requests collection...")
+    # Create a sample value request to ensure the collection exists
+    admin_user = members_collection.find_one({"email": "admin@test.com"})
+    member_user = members_collection.find_one({"email": "member@test.com"})
+    
+    if admin_user and member_user:
+        sample_request = {
+            "member_id": str(member_user["_id"]),
+            "request_type": RequestType.BOTH.value,
+            "current_deal_count": 5,
+            "current_deal_value": 50000.0,
+            "requested_deal_count": 10,
+            "requested_deal_value": 100000.0,
+            "justification": "Sample request for testing purposes",
+            "verified": False,
+            "status": RequestStatus.PENDING.value,
+            "admin_notes": None,
+            "verified_by": None,
+            "verified_at": None,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+        
+        existing_request = value_requests_collection.find_one({"member_id": str(member_user["_id"])})
+        if not existing_request:
+            value_requests_collection.insert_one(sample_request)
+            print("Sample value request created.")
+        else:
+            print("Sample value request already exists.")
+    
+    print("Value requests collection is ready.")
+
 def generate_descriptions_for_all_users():
     print("Generating descriptions for all users...")
     members = list(members_collection.find())
@@ -121,4 +155,5 @@ def generate_descriptions_for_all_users():
 if __name__ == '__main__':
     seed_users()
     seed_members_info()
+    seed_value_requests()
     generate_descriptions_for_all_users()

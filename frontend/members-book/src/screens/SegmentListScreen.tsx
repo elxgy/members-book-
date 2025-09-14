@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   StatusBar,
   ScrollView,
 } from 'react-native';
+import Text from '../components/Text';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
@@ -36,16 +36,12 @@ const segments = [
   'SAÚDE',
   'ENGENHARIA',
   'SEGUROS',
-  'EVENTOS & PRODUÇÕES',
-  'TECNOLOGIA',
-  'FINANÇAS &\nINVESTIMENTOS',
-  'VEÍCULOS',
 ];
 
 export default function SegmentListScreen({ navigation }: Props): React.JSX.Element {
   const handleSegmentPress = (segment: string) => {
-    // Aqui você pode implementar a navegação para a lista de membros do segmento
-    console.log('Segmento selecionado:', segment);
+    // Navega para a tela de membros do segmento selecionado
+    navigation.navigate('MembersBySegment', { segment });
   };
 
   const renderSegmentButton = (segment: string, index: number) => (
@@ -54,7 +50,7 @@ export default function SegmentListScreen({ navigation }: Props): React.JSX.Elem
       style={styles.segmentButton}
       onPress={() => handleSegmentPress(segment)}
     >
-      <Text style={styles.segmentText}>{segment}</Text>
+      <Text style={styles.segmentText} variant="h3">{segment}</Text>
     </TouchableOpacity>
   );
 
@@ -64,7 +60,15 @@ export default function SegmentListScreen({ navigation }: Props): React.JSX.Elem
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.mainTitle}>LISTA DE SEGMENTOS</Text>
+        <View style={styles.headerRow}>
+          <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
+            <Text style={styles.headerText} variant="h2">MEU PERFIL</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerText} variant="h2">SEGMENTOS</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+            <Text style={styles.headerText} variant="h2">CHAT</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Segments Grid */}
@@ -75,8 +79,8 @@ export default function SegmentListScreen({ navigation }: Props): React.JSX.Elem
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.comunidadeText}>COMUNIDADE</Text>
-          <Text style={styles.disruptionText}>DISRUPTION</Text>
+          <Text style={styles.comunidadeText} variant="body">COMUNIDADE</Text>
+          <Text style={styles.disruptionText} variant="h3">DISRUPTION</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -95,12 +99,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
-  mainTitle: {
-    fontSize: 20,
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  headerText: {
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#D4AF37',
     textAlign: 'center',
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
+    flex: 1,
   },
   scrollView: {
     flex: 1,
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 65,
+    minHeight: 75,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: {
@@ -134,11 +146,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   segmentText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
     color: '#1a1a2e',
     textAlign: 'center',
-    lineHeight: 14,
+    lineHeight: 20,
     letterSpacing: 0.3,
   },
   footer: {

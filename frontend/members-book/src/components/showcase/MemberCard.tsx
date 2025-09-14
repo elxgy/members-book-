@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
   Dimensions,
 } from 'react-native';
+import Text from '../Text';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors';
 import HierarchyBadge from '../HierarchyBadge';
@@ -47,7 +47,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
                                  member.hierarchy === 'infinity' ? Colors.infinity.background : 
                                  Colors.disruption.background }
             ]}>
-              <Text style={styles.avatarText}>{member.name.charAt(0)}</Text>
+              <Text style={styles.avatarText} variant="h3">{member.name.charAt(0)}</Text>
             </View>
           )}
           {member.isOnline && <View style={styles.onlineIndicator} />}
@@ -56,14 +56,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
       </View>
       
       <View style={styles.cardContent}>
-        <Text style={styles.memberName} numberOfLines={1}>{member.name}</Text>
-        <Text style={styles.memberTitle} numberOfLines={1}>{member.title}</Text>
-        <Text style={styles.memberCompany} numberOfLines={1}>{member.company}</Text>
+        <Text style={styles.memberName} variant="h3" numberOfLines={1}>{member.name}</Text>
+        <Text style={styles.memberTitle} variant="body" numberOfLines={1}>{member.title}</Text>
+        <Text style={styles.memberCompany} variant="body" numberOfLines={1}>{member.company}</Text>
         
         <View style={styles.expertiseContainer}>
           {member.expertise?.slice(0, 2).map((skill, index) => (
             <View key={index} style={styles.expertiseTag}>
-              <Text style={styles.expertiseText}>{skill}</Text>
+              <Text style={styles.expertiseText} variant="caption">{skill}</Text>
             </View>
           )) || null}
         </View>
@@ -71,7 +71,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, onPress, onConnect }) =
         <View style={styles.cardFooter}>
           <View style={styles.connectionsContainer}>
             <Ionicons name="people-outline" size={14} color={Colors.textSecondary} />
-            <Text style={styles.connectionsText}>{member.connections}</Text>
+            <Text style={styles.connectionsText} variant="caption">{member.connections}</Text>
           </View>
           <TouchableOpacity 
             style={styles.connectButton}

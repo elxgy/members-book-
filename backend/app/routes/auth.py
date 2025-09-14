@@ -24,3 +24,9 @@ def refresh():
 def logout():
     # This would typically involve blacklisting the token
     return jsonify({'message': 'Logout successful'})
+
+@auth_bp.route('/guest-login', methods=['POST'])
+def guest_login():
+    """Guest login endpoint - no credentials required"""
+    response, status_code = auth_service.guest_login()
+    return jsonify(response), status_code

@@ -4,11 +4,23 @@ import { NavigationProp } from '@react-navigation/native';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SegmentListScreen from '../screens/SegmentListScreen';
+import MembersBySegmentScreen from '../screens/MembersBySegmentScreen';
+import MemberDetailScreen from '../screens/MemberDetailScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
+import ChatScreen from '../screens/ChatScreen';
+import AdminFormFieldsScreen from '../screens/AdminFormFieldsScreen';
+import UserManagementScreen from '../screens/UserManagementScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   SegmentList: undefined;
+  MembersBySegment: { segment: string };
+  MemberDetail: { memberId: string; segment: string };
+  UserProfile: undefined;
+  Chat: undefined;
+  AdminFormFields: undefined;
+  UserManagement: undefined;
 };
 
 export type AppNavigationProp = NavigationProp<RootStackParamList>;
@@ -26,6 +38,12 @@ export default function AppNavigator() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SegmentList" component={SegmentListScreen} />
+      <Stack.Screen name="MembersBySegment" component={MembersBySegmentScreen} />
+      <Stack.Screen name="MemberDetail" component={MemberDetailScreen} />
+      <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="AdminFormFields" component={AdminFormFieldsScreen} />
+      <Stack.Screen name="UserManagement" component={UserManagementScreen} />
     </Stack.Navigator>
   );
 }

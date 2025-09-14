@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
 } from 'react-native';
+import Text from '../Text';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../constants/Colors';
 import type { FilterType } from '../../types';
@@ -44,7 +44,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       <Text style={[
         styles.filterButtonText,
         selectedFilter === option.value && styles.filterButtonTextActive
-      ]}>
+      ]} variant="body">
         {option.label}
       </Text>
     </TouchableOpacity>

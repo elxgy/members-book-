@@ -40,3 +40,37 @@ def approve_validation(current_user, request_id):
 def reject_validation(current_user, request_id):
     response, status_code = validation_service.reject_request(request_id)
     return jsonify(response), status_code
+
+@admin_bp.route('/members', methods=['POST'])
+@token_required
+@permission_required(Role.ADMIN)
+def create_user(current_user):
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    required_fields = ['name', 'email']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+    
+    response, status_code = admin_service.create_user(data)
+    return jsonify(response), status_code
+
+@admin_bp.route('/members/<string:user_id>', methods=['PUT'])
+@token_required
+@permission_required(Role.ADMIN)
+def update_user(current_user, user_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    response, status_code = admin_service.update_user(user_id, data)
+    return jsonify(response), status_code
+
+@admin_bp.route('/members/<string:user_id>', methods=['DELETE'])
+@token_required
+@permission_required(Role.ADMIN)
+def delete_user(current_user, user_id):
+    response, status_code = admin_service.delete_user(user_id)
+    return jsonify(response), status_code

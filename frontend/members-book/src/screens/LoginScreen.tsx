@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import Text from '../components/Text';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -36,13 +36,80 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
 
     setLoading(true);
     
-    // Simular chamada de API
-    setTimeout(() => {
+    try {
+      // Simular chamada de API para autenticação
+      // Em uma implementação real, você faria uma chamada para o backend
+      const response = await simulateLogin(email, password);
+      
+      if (response.success) {
+        const userRole = response.user.role;
+        
+        Alert.alert('Sucesso', 'Login realizado com sucesso!');
+        
+        // Verificar se o usuário é administrador
+        if (userRole === 'ADMIN') {
+          // Mostrar opção para acessar painel administrativo
+          Alert.alert(
+            'Acesso Administrativo',
+            'Você possui privilégios de administrador. Deseja acessar o painel administrativo?',
+            [
+              {
+                text: 'Área do Usuário',
+                onPress: () => navigation.navigate('SegmentList'),
+                style: 'cancel'
+              },
+              {
+                text: 'Painel Admin',
+                onPress: () => navigation.navigate('AdminFormFields')
+              }
+            ]
+          );
+        } else {
+          navigation.navigate('SegmentList');
+        }
+      } else {
+        Alert.alert('Erro', response.message || 'Credenciais inválidas');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao realizar login. Tente novamente.');
+    } finally {
       setLoading(false);
-      // Aqui você implementaria a lógica real de autenticação
-      Alert.alert('Sucesso', 'Login realizado com sucesso!');
-      navigation.navigate('SegmentList');
-    }, 2000);
+    }
+  };
+
+  // Função para simular login - em produção seria substituída por chamada real à API
+  const simulateLogin = async (email: string, password: string) => {
+    return new Promise<{success: boolean, user?: any, message?: string}>((resolve) => {
+      setTimeout(() => {
+        // Simular diferentes tipos de usuário baseado no email
+        if (email === 'admin@disruption.com' && password === 'admin123') {
+          resolve({
+            success: true,
+            user: {
+              id: '1',
+              email: email,
+              name: 'Administrador',
+              role: 'ADMIN'
+            }
+          });
+        } else if (email.includes('@') && password.length >= 6) {
+          resolve({
+            success: true,
+            user: {
+              id: '2',
+              email: email,
+              name: 'Usuário Comum',
+              role: 'MEMBER'
+            }
+          });
+        } else {
+          resolve({
+            success: false,
+            message: 'Email ou senha inválidos'
+          });
+        }
+      }, 1500);
+    });
   };
 
   const handleGoBack = () => {
@@ -72,19 +139,19 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
 
             {/* Brand Section */}
             <View style={styles.brandSection}>
-              <Text style={styles.comunidadeText}>COMUNIDADE</Text>
-              <Text style={styles.disruptionText}>DISRUPTION</Text>
+              <Text style={styles.comunidadeText} variant="bodySmall">COMUNIDADE</Text>
+            <Text style={styles.disruptionText} variant="h4">DISRUPTION</Text>
             </View>
 
             {/* Form Section */}
             <View style={styles.formSection}>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Email</Text>
+                <Text style={styles.inputLabel} variant="bodySmall">E-mail</Text>
                 <TextInput
                   style={styles.input}
                   value={email}
                   onChangeText={setEmail}
-                  placeholder="Digite seu email"
+                  placeholder="Digite seu e-mail"
                   placeholderTextColor="#666"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -93,7 +160,7 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Senha</Text>
+                <Text style={styles.inputLabel} variant="bodySmall">Senha</Text>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={styles.passwordInput}
@@ -123,7 +190,7 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
                 onPress={handleLogin}
                 disabled={loading}
               >
-                <Text style={styles.loginButtonText}>
+                <Text style={styles.loginButtonText} variant="button">
                   {loading ? 'ENTRANDO...' : 'ENTRAR'}
                 </Text>
               </TouchableOpacity>
@@ -131,7 +198,7 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
 
             {/* Footer */}
             <View style={styles.footer}>
-              <Text style={styles.footerText}>Members Book 2025</Text>
+              <Text style={styles.footerText} variant="caption">Members Book 2025</Text>
             </View>
           </View>
         </KeyboardAvoidingView>

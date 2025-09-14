@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import Text from '../components/Text';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -32,27 +32,27 @@ export default function HomeScreen({ navigation }: Props): React.JSX.Element {
         <View style={styles.content}>
           {/* Header Section */}
           <View style={styles.headerSection}>
-            <Text style={styles.comunidadeText}>COMUNIDADE</Text>
-            <Text style={styles.disruptionText}>DISRUPTION</Text>
+            <Text style={styles.comunidadeText} variant="caption">COMUNIDADE</Text>
+            <Text style={styles.disruptionText} variant="subtitle">DISRUPTION</Text>
           </View>
 
           {/* Main Title Section */}
           <View style={styles.titleSection}>
             <View style={styles.membersBookContainer}>
-              <Text style={styles.membersText}>MEMBERS</Text>
-              <View style={styles.bookRow}>
-                <Text style={styles.bookText}>BOOK</Text>
-                <Text style={styles.yearText}>2025</Text>
-              </View>
+              <Text style={styles.membersText} variant="h1">MEMBERS</Text>
+            <View style={styles.bookRow}>
+              <Text style={styles.bookText} variant="h1">BOOK</Text>
+              <Text style={styles.yearText} variant="h2">2025</Text>
+            </View>
             </View>
           </View>
 
           {/* Bottom Section */}
           <View style={styles.bottomSection}>
-            <Text style={styles.enjoyText}>Enjoy</Text>
+            <Text style={styles.enjoyText} variant="h3">Enjoy</Text>
             
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>ENTRAR</Text>
+              <Text style={styles.loginButtonText} variant="button">ENTRAR</Text>
             </TouchableOpacity>
           </View>
         </View>

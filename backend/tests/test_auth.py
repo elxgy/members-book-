@@ -14,3 +14,12 @@ def test_login(client):
     })
     assert rv.status_code == 200
     assert rv.json == {'message': 'Login successful'}
+
+def test_guest_login(client):
+    """Test guest login functionality"""
+    rv = client.post('/api/auth/guest-login')
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert 'token' in data
+    assert data['user_type'] == 'guest'
+    assert data['token'] is not None

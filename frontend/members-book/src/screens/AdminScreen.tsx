@@ -20,6 +20,7 @@ import { ActionCard } from '../components/admin/ActionCard';
 import { UserItem } from '../components/admin/UserItem';
 import { UserModal } from '../components/admin/UserModal';
 import type { AdminUser, AdminAction, SystemMetric, StatusFilterType } from '../types';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -73,6 +74,7 @@ const mockUsers: AdminUser[] = [
 
 const AdminScreen: React.FC = () => {
   const { user } = useUser();
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<StatusFilterType>('all');
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
@@ -132,6 +134,14 @@ const AdminScreen: React.FC = () => {
     },
     {
       id: '3',
+      title: 'Gerenciar Usuários',
+      description: 'Adicionar e remover usuários',
+      icon: 'people-outline',
+      color: '#FF6B35',
+      onPress: () => navigation.navigate('UserManagement' as never),
+    },
+    {
+      id: '4',
       title: 'Configurações',
       description: 'Configurações do sistema',
       icon: 'settings-outline',
@@ -139,7 +149,7 @@ const AdminScreen: React.FC = () => {
       onPress: () => Alert.alert('Em breve', 'Configurações do sistema em desenvolvimento.'),
     },
     {
-      id: '4',
+      id: '5',
       title: 'Backup',
       description: 'Backup e restauração',
       icon: 'cloud-download-outline',

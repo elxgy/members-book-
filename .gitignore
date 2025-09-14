@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 .trae/
 .expo/
 *__pycache__/
+.vercel/
+.venv/
