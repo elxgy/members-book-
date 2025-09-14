@@ -72,6 +72,7 @@ class AuthService {
           };
           break;
         case 'member@test.com':
+        case 'membro@test.com':
           mockUser = {
             id: 'mock_member_id',
             email: credentials.email,
@@ -127,6 +128,23 @@ class AuthService {
   }
 
   async guestLogin(): Promise<{ success: boolean; user?: User; message?: string }> {
+    if (MOCK_MODE) {
+      console.log('--- MOCK MODE: Faking guest login ---');
+      
+      const mockUser: User = {
+        id: 'mock_guest_id',
+        email: 'guest@test.com',
+        name: 'Mock Guest',
+        role: 'GUEST',
+      };
+
+      await AsyncStorage.setItem('access_token', 'mock_guest_token');
+      return {
+        success: true,
+        user: mockUser,
+      };
+    }
+
     try {
       const response: LoginResponse = await this.makeRequest('/auth/guest-login', {
         method: 'POST',

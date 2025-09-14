@@ -146,13 +146,22 @@ export default function AdminFormFieldsScreen({ navigation }: Props): React.JSX.
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle} variant="h2">GERENCIAR CAMPOS</Text>
-          <TouchableOpacity 
-            style={styles.userManagementButton}
-            onPress={() => navigation.navigate('UserManagement' as never)}
-          >
-            <Icon name="users" size={16} color="#D4AF37" />
-            <Text style={styles.userManagementText}>Usuários</Text>
-          </TouchableOpacity>
+          <View style={styles.headerButtonsContainer}>
+            <TouchableOpacity 
+              style={styles.userManagementButton}
+              onPress={() => navigation.navigate('UserManagement' as never)}
+            >
+              <Icon name="users" size={16} color="#D4AF37" />
+              <Text style={styles.userManagementText}>Usuários</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.approvalsButton}
+              onPress={() => navigation.navigate('AdminApprovals' as never)}
+            >
+              <Icon name="check-circle" size={16} color="#D4AF37" />
+              <Text style={styles.approvalsText}>Aprovações</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.placeholder} />
       </View>
@@ -225,6 +234,10 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     marginBottom: 8,
   },
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
   userManagementButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -236,6 +249,22 @@ const styles = StyleSheet.create({
     borderColor: '#D4AF37',
   },
   userManagementText: {
+    fontSize: 12,
+    color: '#D4AF37',
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  approvalsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D4AF37',
+  },
+  approvalsText: {
     fontSize: 12,
     color: '#D4AF37',
     fontWeight: '600',

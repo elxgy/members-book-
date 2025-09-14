@@ -16,6 +16,9 @@ interface UserContextType {
   logout: () => Promise<void>;
   isAuthenticated: () => Promise<boolean>;
   hasRole: (role: string) => boolean;
+  isGuest: () => boolean;
+  canAccessChat: () => boolean;
+  canAccessProfile: () => boolean;
 }
 
 interface UserProviderProps {
@@ -92,6 +95,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return user?.role?.toUpperCase() === role.toUpperCase();
   };
 
+  const isGuest = (): boolean => {
+    return user?.role === 'GUEST';
+  };
+
+  const canAccessChat = (): boolean => {
+    return !isGuest();
+  };
+
+  const canAccessProfile = (): boolean => {
+    return !isGuest();
+  };
+
   const value = {
     user,
     loading,
@@ -99,6 +114,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     logout,
     isAuthenticated,
     hasRole,
+    isGuest,
+    canAccessChat,
+    canAccessProfile,
   };
 
   return (

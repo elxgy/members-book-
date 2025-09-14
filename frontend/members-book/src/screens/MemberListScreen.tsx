@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { Colors } from '../constants/Colors';
 import MemberCard from '../components/MemberCard';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const { width, height } = Dimensions.get('window');
 
@@ -116,233 +114,103 @@ export default function MemberListScreen({ route, navigation }: any) {
   const sectorMembers = membersData.filter(member => member.sector === sector);
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <LinearGradient
-        colors={[Colors.gradientStart, Colors.gradientMiddle, Colors.gradientEnd]}
-        style={styles.gradient}
-      >
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-left" size={20} color="#D4AF37" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>MEMBROS</Text>
+          <Text style={styles.headerSubtitle}>{sectorName.toUpperCase()}</Text>
+        </View>
+        <View style={styles.placeholder} />
+      </View>
+
+      {/* Content */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          {/* Header Section */}
-          <View style={styles.headerSection}>
-            <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Ionicons name="arrow-back" size={24} color={Colors.white} />
-            </TouchableOpacity>
-            
-            <View style={styles.titleContainer}>
-              <Text style={styles.mainTitle}>MEMBROS</Text>
-              <Text style={styles.subtitle}>{sectorName.toUpperCase()}</Text>
-            </View>
-          </View>
-
-          {/* Decorative Elements */}
-          <View style={styles.decorativeSection}>
-            <View style={styles.decorativeLine} />
-            <View style={styles.decorativeCircle} />
-            <View style={styles.decorativeLine} />
-          </View>
-
-          {/* Members List */}
-
+          <Text style={styles.sectionTitle}>Conecte-se com os membros</Text>
+          <Text style={styles.sectionDescription}>Explore os perfis e encontre oportunidades de networking</Text>
+          
           <FlatList
             data={sectorMembers}
             renderItem={({ item }) => <MemberCard member={item} />}
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
             contentContainerStyle={styles.listContainer}
           />
-
-          {/* Footer Section */}
-          <View style={styles.footerSection}>
-            <Text style={styles.footerText}>Conecte-se com os membros</Text>
-            <View style={styles.footerDecorative}>
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-              <View style={styles.footerDot} />
-            </View>
-          </View>
         </View>
-      </LinearGradient>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
-  gradient: {
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#D4AF37',
+    textAlign: 'center',
+    letterSpacing: 1.2,
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+  },
+  placeholder: {
+    width: 36,
+  },
+  scrollView: {
     flex: 1,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  headerSection: {
-    alignItems: 'center',
-    marginBottom: 20,
-    position: 'relative',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    padding: 10,
-    zIndex: 1,
-  },
-  titleContainer: {
-    alignItems: 'center',
-  },
-  mainTitle: {
-    fontSize: 28,
-    fontWeight: '900',
-    color: Colors.textOnPrimary,
-    textAlign: 'center',
-    letterSpacing: 2,
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: Colors.metallicGold,
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  decorativeSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-  },
-  decorativeLine: {
-    width: 50,
-    height: 2,
-    backgroundColor: Colors.metallicGold,
-    opacity: 0.8,
-  },
-  decorativeCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: Colors.accent,
-    marginHorizontal: 12,
-  },
-  membersList: {
-    flex: 1,
-  },
-  membersContainer: {
-    paddingBottom: 20,
-  },
-  memberCard: {
-    backgroundColor: Colors.background,
-    borderRadius: 20,
     padding: 20,
-    marginBottom: 20,
-    shadowColor: Colors.shadow,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
-    position: 'relative',
   },
-  relevanceBadge: {
-    position: 'absolute',
-    top: 15,
-    right: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 15,
-    zIndex: 1,
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    marginBottom: 8,
   },
-  relevanceText: {
-    color: Colors.textOnPrimary,
-    fontSize: 12,
-    fontWeight: '700',
-    marginLeft: 5,
-  },
-  photoContainer: {
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  memberPhoto: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: Colors.metallicGold,
-  },
-  memberInfo: {
-    alignItems: 'center',
-  },
-  memberName: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: Colors.text,
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-  memberCompany: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.accent,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  memberDescription: {
+  sectionDescription: {
     fontSize: 14,
-    color: Colors.textSecondary,
-    textAlign: 'center',
+    color: '#666',
+    marginBottom: 24,
     lineHeight: 20,
-    marginBottom: 15,
   },
-  contactContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 15,
-  },
-  contactButton: {
-    backgroundColor: Colors.backgroundSecondary,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  footerSection: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: Colors.white,
-    textAlign: 'center',
-    opacity: 0.8,
-    fontWeight: '500',
-    marginBottom: 15,
-  },
-  footerDecorative: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: Colors.accent,
-    marginHorizontal: 4,
-    opacity: 0.7,
+  listContainer: {
+    paddingBottom: 20,
   },
 });

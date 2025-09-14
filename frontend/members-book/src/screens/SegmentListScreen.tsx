@@ -10,6 +10,8 @@ import {
 import Text from '../components/Text';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { useUser } from '../context/UserContext';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type SegmentListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SegmentList'>;
 
@@ -39,6 +41,8 @@ const segments = [
 ];
 
 export default function SegmentListScreen({ navigation }: Props): React.JSX.Element {
+  const { canAccessChat, canAccessProfile } = useUser();
+
   const handleSegmentPress = (segment: string) => {
     // Navega para a tela de membros do segmento selecionado
     navigation.navigate('MembersBySegment', { segment });
@@ -60,15 +64,44 @@ export default function SegmentListScreen({ navigation }: Props): React.JSX.Elem
       
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
-            <Text style={styles.headerText} variant="h2">MEU PERFIL</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerText} variant="h2">SEGMENTOS</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-            <Text style={styles.headerText} variant="h2">CHAT</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.placeholder} />
+        <View style={styles.headerTitleContainer}>
+           <View style={styles.headerButtonsContainer}>
+             <TouchableOpacity style={[styles.navButton, styles.activeNavButton]}>
+               <Icon name="th-large" size={16} color="#FFFFFF" />
+               <Text style={[styles.navButtonText, styles.activeNavButtonText]}>SEGMENTOS</Text>
+             </TouchableOpacity>
+            {canAccessProfile() ? (
+              <TouchableOpacity 
+                style={styles.navButton}
+                onPress={() => navigation.navigate('UserProfile')}
+              >
+                <Icon name="user" size={16} color="#D4AF37" />
+                <Text style={styles.navButtonText}>MEU PERFIL</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.navButton, styles.disabledNavButton]}>
+                <Icon name="user" size={16} color="#999" />
+                <Text style={styles.disabledNavButtonText}>MEU PERFIL</Text>
+              </View>
+            )}
+            {canAccessChat() ? (
+              <TouchableOpacity 
+                style={styles.navButton}
+                onPress={() => navigation.navigate('Chat')}
+              >
+                <Icon name="comments" size={16} color="#D4AF37" />
+                <Text style={styles.navButtonText}>CHAT</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.navButton, styles.disabledNavButton]}>
+                <Icon name="comments" size={16} color="#999" />
+                <Text style={styles.disabledNavButtonText}>CHAT</Text>
+              </View>
+            )}
+           </View>
+         </View>
+        <View style={styles.placeholder} />
       </View>
 
       {/* Segments Grid */}
@@ -93,26 +126,67 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 30,
-    paddingBottom: 40,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-  },
-  headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
-  headerText: {
-    fontSize: 14,
+  placeholder: {
+    width: 36,
+  },
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#D4AF37',
     textAlign: 'center',
     letterSpacing: 1.2,
-    flex: 1,
+    marginBottom: 8,
+  },
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  navButton: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     paddingHorizontal: 12,
+     paddingVertical: 6,
+     backgroundColor: '#F8F9FA',
+     borderRadius: 16,
+     borderWidth: 1,
+     borderColor: '#D4AF37',
+   },
+   activeNavButton: {
+     backgroundColor: '#D4AF37',
+   },
+   activeNavButtonText: {
+     color: '#FFFFFF',
+   },
+  navButtonText: {
+    fontSize: 12,
+    color: '#D4AF37',
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  disabledNavButton: {
+    borderColor: '#E0E0E0',
+    backgroundColor: '#F5F5F5',
+  },
+  disabledNavButtonText: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '600',
+    marginLeft: 4,
   },
   scrollView: {
     flex: 1,
@@ -166,9 +240,10 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   disruptionText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#D4AF37',
     letterSpacing: 1,
   },
+
 });
