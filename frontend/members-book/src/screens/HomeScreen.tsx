@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }: Props): React.JSX.Element {
 
           {/* Bottom Section */}
           <View style={styles.bottomSection}>
-            <Text style={styles.enjoyText} variant="h3">Enjoy</Text>
+            <Text style={styles.veggetiText} variant="h3">Veggeti</Text>
             
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
               <Text style={styles.loginButtonText} variant="button">ENTRAR</Text>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 40,
   },
-  enjoyText: {
+  veggetiText: {
     fontSize: 32,
     fontWeight: '300',
     color: '#FFFFFF',

@@ -22,16 +22,16 @@ export const membersBySegment: MembersBySegment = {
   'COMÉRCIO': [
     {
       id: '1',
-      name: 'Wander Miranda',
-      company: 'CEO Enjoy',
-      segment: 'COMÉRCIO',
+      name: 'Pablo Veggeti da Silva',
+      company: 'Veggeti Inovação',
+      segment: 'TECNOLOGIA',
       imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
       hierarchy: 'SOCIOS',
-      bio: 'Wander Miranda é fundador e CEO da Enjoy Educação, escola de negócios para empresários que está transformando o cenário empresarial capixaba. É autor do livro Máquina de Resultados e idealizador da maior evento de performance empresarial do ES.',
+      bio: 'Pablo Veggeti da Silva é fundador e CEO da Veggeti Inovação, empresa de tecnologia que está transformando o cenário empresarial capixaba com soluções inovadoras. É autor do livro Inovação Empresarial e idealizador de eventos de tecnologia e inovação no ES.',
       socialMedia: {
-        instagram: 'wandermiranda',
-        linkedin: 'wandermiranda',
-        email: 'wander@enjoy.com.br'
+        instagram: 'pabloveggeti',
+        linkedin: 'pabloveggeti',
+        email: 'pablo@veggetiinovacao.com.br'
       }
     },
     {
